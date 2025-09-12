@@ -11,7 +11,7 @@ interface DesignType {
   status: boolean;
 }
 
-export default function EditDesignType() {
+export default function editDesignType() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [initialValues, setInitialValues] = useState<DesignType | null>(null);
@@ -20,10 +20,9 @@ export default function EditDesignType() {
   useEffect(() => {
     const fetchDesignType = async () => {
       try {
-        const res = await api.get(`/user/design-type/${id}/edit`);
+        const res = await api.get(`/design-type/${id}/edit`);
         const data = (res.data as { data: any }).data;
 
-        // convert numeric status -> boolean for checkbox
         setInitialValues({
           ...data,
           status: data.status === 1,
@@ -37,7 +36,7 @@ export default function EditDesignType() {
 
   const handleSubmit = async (values: DesignType) => {
     try {
-      await api.put(`/user/design-type/${id}`, values);
+      await api.put(`/design-type/${id}`, values);
       toast.success("Design Type updated successfully!");
       navigate("/dashboard/master/design-type");
     } catch (err) {

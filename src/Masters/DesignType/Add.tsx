@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 import api from "../../lib/axios";
 import toast from "react-hot-toast";
 
-export default function AddCustomer() {
+export default function addDesignType() {
   const navigate = useNavigate();
 
   const handleSubmit = async (values: any) => {
     try {
-      const res = await api.post("/user/design-type", values);
+      const res = await api.post("/design-type", values);
       const success = (res.data as { success: any[] }).success;
       const message = (res.data as { message: string }).message;
 

@@ -1,18 +1,22 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import api from "../../lib/axios";
+import { confirmAlert } from "../../lib/alertUtils";
+import toast from "react-hot-toast";
+import ButtonLoader from "../../components/common/ButtonLoader";
 
 export default function Main() {
   const [design_types, setDesignTypes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [statusLoading, setStatusLoading] = useState<number | null>(null);
 
   // Fetch design_types from API
   const fetchDesignTypes = async () => {
     try {
-       const res = await api.get("/user/design-type");
-       
-    setDesignTypes((res.data as { data: any[] }).data);
-    // setPagination(res.data.meta);
+      const res = await api.get("/design-type");
+
+      setDesignTypes((res.data as { data: any[] }).data);
+      // setPagination(res.data.meta);
     } catch (error) {
       console.error("Failed to fetch design_types:", error);
     } finally {
@@ -20,7 +24,28 @@ export default function Main() {
     }
   };
 
-  
+  const changeStatus = (id: number) => {
+    confirmAlert(
+      "You won’t change the status!",
+      async () => {
+        try {
+          setStatusLoading(id);
+          const res = await api.put(`/design-type/change-status/${id}`);
+          const message = (res.data as { message: string }).message;
+          toast.success(message);
+          fetchDesignTypes();
+        } catch (error: any) {
+          console.error("Failed to change status:", error);
+          toast.error(error.response?.data?.message);
+        }finally {
+        setStatusLoading(null); 
+      }
+      },
+      () => {
+        toast("Action cancelled", { icon: "⚠️" });
+      }
+    );
+  };
 
   useEffect(() => {
     fetchDesignTypes();
@@ -66,9 +91,9 @@ export default function Main() {
                 </td>
               </tr>
             ) : design_types.length > 0 ? (
-              design_types.map((c, index) => (
+              design_types.map((val, index) => (
                 <tr
-                  key={c.id}
+                  key={val.id}
                   className={`hover:bg-gray-50 transition ${
                     index % 2 === 0 ? "bg-white" : "bg-gray-50"
                   }`}
@@ -77,14 +102,14 @@ export default function Main() {
                     {index + 1}
                   </td>
                   <td className="px-4 py-3 border-b border-gray-300">
-                    {c.title}
+                    {val.title}
                   </td>
                   <td className="px-4 py-3 border-b border-gray-300">
-                    {c.short}
+                    {val.short}
                   </td>
-                  
+
                   <td className="px-4 py-3 border-b border-gray-300 text-center">
-                    {c.status ? (
+                    {val.status ? (
                       <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full">
                         Active
                       </span>
@@ -96,12 +121,24 @@ export default function Main() {
                   </td>
                   <td className="px-4 py-3 border-b border-gray-300 text-center space-x-2">
                     <Link
-                      to={`/dashboard/master/design-type/edit/${c.id}`}
+                      to={`/dashboard/master/design-type/edit/${val.id}`}
                       className="px-3 py-1 bg-blue-500 text-white text-xs rounded-lg shadow hover:bg-blue-600 transition"
                     >
                       Edit
                     </Link>
-                    
+
+                    <button
+                      onClick={() => changeStatus(val.id)}
+                      disabled={statusLoading === val.id}
+                      
+                      className={`px-3 py-1 text-white text-xs rounded-lg shadow transition ${
+    statusLoading === val.id
+      ? "bg-gray-400 cursor-not-allowed"
+      : "bg-red-500 hover:bg-red-600"
+  }`}
+                    >
+                      {statusLoading === val.id ? <ButtonLoader text="Updating..." /> : "Change Status"}
+                    </button>
                   </td>
                 </tr>
               ))
@@ -111,7 +148,7 @@ export default function Main() {
                   colSpan={5}
                   className="px-4 py-6 text-center text-gray-500 italic"
                 >
-                  No design_types found 🚫
+                  No Design Types found
                 </td>
               </tr>
             )}
