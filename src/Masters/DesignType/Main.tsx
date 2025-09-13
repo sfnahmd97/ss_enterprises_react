@@ -10,7 +10,6 @@ export default function Main() {
   const [loading, setLoading] = useState(true);
   const [statusLoading, setStatusLoading] = useState<number | null>(null);
 
-  // Fetch design_types from API
   const fetchDesignTypes = async () => {
     try {
       const res = await api.get("/design-type");
@@ -53,7 +52,6 @@ export default function Main() {
 
   return (
     <div className="p-6">
-      {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800">Design Type List</h2>
         <Link
@@ -64,7 +62,6 @@ export default function Main() {
         </Link>
       </div>
 
-      {/* Table */}
       <div className="overflow-x-auto bg-white rounded-xl shadow">
         <table className="w-full text-sm text-left border-collapse">
           <thead className="bg-gray-100 text-gray-700 uppercase text-xs">

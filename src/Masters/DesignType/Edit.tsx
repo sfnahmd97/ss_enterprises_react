@@ -3,13 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import MasterForm from "./MasterForm";
 import api from "../../lib/axios";
 import toast from "react-hot-toast";
+import type { DesignType } from "../../interfaces/DesignType";
 
-interface DesignType {
-  id?: number;
-  title: string;
-  short: string;
-  status: boolean;
-}
 
 export default function editDesignType() {
   const navigate = useNavigate();
