@@ -8,11 +8,12 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://ss.crowka.com",
+        // target: "http://127.0.0.1:8000",
+        target: "https://ss.crowka.com", 
         changeOrigin: true,
         secure: false,
       },
-    },
+    }, 
   },
   build: {
     rollupOptions: {
