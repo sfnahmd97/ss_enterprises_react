@@ -1,62 +1,67 @@
-
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import LoginPage from "./pages/LoginPage";
-import Dashboard from "./pages/Dashboard";
+import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { Toaster } from "react-hot-toast";
+import ToastProvider from "./components/ToastProvider";
+
+import LoginPage from "./pages/LoginPage";
+import HomePage from "./pages/HomePage";
+import ReportsPage from "./pages/ReportPage";
+import SettingsPage from "./pages/Settings";
+
+// Masters
+
+import MainDesignType from "./Masters/DesignType/Main";
+import AddDesignType from "./Masters/DesignType/Add";
+import EditDesignType from "./Masters/DesignType/Edit";
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Public Route */}
         <Route path="/login" element={<LoginPage />} />
+
+        {/* Dashboard Group */}
         <Route
           path="/dashboard/*"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <Layout>
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="reports" element={<ReportsPage />} />
+                  <Route path="settings" element={<SettingsPage />} />
+                </Routes>
+              </Layout>
             </ProtectedRoute>
           }
         />
+
+        {/* Master Group */}
+        <Route
+          path="/master/*"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Routes>
+                  {/* Design Type */}
+                  <Route path="design-type" element={<MainDesignType />} />
+                  <Route path="design-type/add" element={<AddDesignType />} />
+                  <Route
+                    path="design-type/edit/:id"
+                    element={<EditDesignType />}
+                  />
+                </Routes>
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Catch-all → redirect to login */}
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
 
-      {/* <Toaster position="top-right" reverseOrder={false} /> */}
-
-      <Toaster
-        position="top-right"
-        reverseOrder={false}
-        toastOptions={{
-          className: "",
-          duration: 4000,
-          style: {
-            background: "#333",
-            color: "#fff",
-            borderRadius: "12px",
-            padding: "12px 16px",
-          },
-          success: {
-            style: {
-              background: "#4caf50",
-              color: "#fff",
-            },
-            iconTheme: {
-              primary: "#fff",
-              secondary: "#4caf50",
-            },
-          },
-          error: {
-            style: {
-              background: "#f44336",
-              color: "#fff",
-            },
-            iconTheme: {
-              primary: "#fff",
-              secondary: "#f44336",
-            },
-          },
-        }}
-      />
+      <ToastProvider />
     </BrowserRouter>
   );
 }

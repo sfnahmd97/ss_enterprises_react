@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../../lib/axios";
 import toast from "react-hot-toast";
 import type { FormikHelpers } from "formik";
-import type { DesignType } from "../../interfaces/DesignType";
+import type { DesignType } from "../../interfaces/common";
 
 
 
@@ -18,7 +18,7 @@ export default function addDesignType() {
 
       if (success) {
         toast.success("Design Type created successfully");
-        navigate("/dashboard/master/design-type");
+        navigate("/master/design-type");
       } else {
         toast.error(message || "Something went wrong");
       }

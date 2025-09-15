@@ -1,8 +1,7 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import type { FormikHelpers } from "formik";
 import * as Yup from "yup";
-import type { DesignType } from "../../interfaces/DesignType";
-
+import type { DesignType } from "../../interfaces/common";
 
 interface Props {
   initialValues: DesignType;

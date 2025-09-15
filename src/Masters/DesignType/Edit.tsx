@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import MasterForm from "./MasterForm";
 import api from "../../lib/axios";
 import toast from "react-hot-toast";
-import type { DesignType } from "../../interfaces/DesignType";
+import type { DesignType } from "../../interfaces/common";
 
 
 export default function editDesignType() {
@@ -33,7 +33,7 @@ export default function editDesignType() {
     try {
       await api.put(`/design-type/${id}`, values);
       toast.success("Design Type updated successfully!");
-      navigate("/dashboard/master/design-type");
+      navigate("/master/design-type");
     } catch (err) {
       toast.error("Failed to update Design Type");
     }

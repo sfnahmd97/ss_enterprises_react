@@ -4,20 +4,46 @@ import api from "../../lib/axios";
 import { confirmAlert } from "../../lib/alertUtils";
 import toast from "react-hot-toast";
 import ButtonLoader from "../../components/common/ButtonLoader";
+import type { ListApiResponse } from "../../interfaces/common";
+import Swal from "sweetalert2";
+import Pagination from "../../components/common/Pagination";
 
 export default function Main() {
   const [design_types, setDesignTypes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusLoading, setStatusLoading] = useState<number | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const fetchDesignTypes = async () => {
+  // pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const [total, setTotal] = useState(0);
+  const [lastPage, setLastPage] = useState(1);
+
+  const fetchDesignTypes = async (page = 1, search = "") => {
     try {
-      const res = await api.get("/design-type");
+      setLoading(true);
 
-      setDesignTypes((res.data as { data: any[] }).data);
-      // setPagination(res.data.meta);
-    } catch (error) {
+      const params: any = { page, per_page: perPage };
+      if (search) params.title = search;
+      const res = await api.get<ListApiResponse<any[]>>(`/design-type`, {
+        params,
+      });
+
+      const response = res.data;
+
+      setDesignTypes(response.data);
+      setCurrentPage(response.meta.current_page);
+      setPerPage(response.meta.per_page);
+      setTotal(response.meta.total);
+      setLastPage(response.meta.last_page);
+    } catch (error: any) {
       console.error("Failed to fetch design_types:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops!",
+        text: "Something went wrong",
+      });
     } finally {
       setLoading(false);
     }
@@ -32,126 +58,158 @@ export default function Main() {
           const res = await api.put(`/design-type/change-status/${id}`);
           const message = (res.data as { message: string }).message;
           toast.success(message);
-          fetchDesignTypes();
+          fetchDesignTypes(currentPage);
         } catch (error: any) {
           console.error("Failed to change status:", error);
           toast.error(error.response?.data?.message);
-        }finally {
-        setStatusLoading(null); 
-      }
+        } finally {
+          setStatusLoading(null);
+        }
       },
       () => {
-        toast("Action cancelled", { icon: "⚠️" });
+        console.log("Change status cancelled");
       }
     );
   };
 
   useEffect(() => {
-    fetchDesignTypes();
-  }, []);
+    fetchDesignTypes(currentPage);
+  }, [currentPage]);
 
   return (
     <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">Design Type List</h2>
-        <Link
-          to="/dashboard/master/design-type/add"
-          className="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition"
-        >
-          + Add
-        </Link>
-      </div>
+  {/* Add Button (outside the card) */}
+  <div className="flex justify-end mb-4">
+    <Link
+      to="/master/design-type/add"
+      className="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition"
+    >
+      + Add
+    </Link>
+  </div>
 
-      <div className="overflow-x-auto bg-white rounded-xl shadow">
-        <table className="w-full text-sm text-left border-collapse">
-          <thead className="bg-gray-100 text-gray-700 uppercase text-xs">
-            <tr>
-              <th className="px-4 py-3 border-b border-gray-300">Sl.no</th>
-              <th className="px-4 py-3 border-b border-gray-300">Name</th>
-              <th className="px-4 py-3 border-b border-gray-300">Short</th>
-              <th className="px-4 py-3 border-b border-gray-300 text-center">
-                Active
-              </th>
-              <th className="px-4 py-3 border-b border-gray-300 text-center">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
+  {/* Card */}
+  <div className="bg-white shadow rounded-xl border border-gray-200">
+    {/* Header with title + search box */}
+    <div className="flex flex-col md:flex-row md:justify-between md:items-center p-4 border-b border-gray-200 gap-3">
+      <h6 className="text-lg font-semibold text-gray-800">Design Type List</h6>
+      <input
+  type="text"
+  placeholder="Search..."
+  className="px-3 py-1.5 w-60 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
+  value={searchTerm}
+  onChange={(e) => {
+    setSearchTerm(e.target.value);
+    fetchDesignTypes(1, e.target.value);
+  }}
+/>
+
+    </div>
+
+    {/* Table */}
+    <div className="p-4 overflow-x-auto">
+          <table className="w-full table-auto text-sm text-left">
+            <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
               <tr>
-                <td
-                  colSpan={5}
-                  className="px-4 py-6 text-center text-gray-500 italic"
-                >
-                  Loading ...
-                </td>
+                <th className="px-4 py-3">#</th>
+                <th className="px-4 py-3">Name</th>
+                <th className="px-4 py-3">Short</th>
+                <th className="px-4 py-3 text-center">Status</th>
+                <th className="px-4 py-3 text-center">Created at</th>
+                <th className="px-4 py-3 text-center">Actions</th>
               </tr>
-            ) : design_types.length > 0 ? (
-              design_types.map((val, index) => (
-                <tr
-                  key={val.id}
-                  className={`hover:bg-gray-50 transition ${
-                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                  }`}
-                >
-                  <td className="px-4 py-3 border-b border-gray-300">
-                    {index + 1}
-                  </td>
-                  <td className="px-4 py-3 border-b border-gray-300">
-                    {val.title}
-                  </td>
-                  <td className="px-4 py-3 border-b border-gray-300">
-                    {val.short}
-                  </td>
-
-                  <td className="px-4 py-3 border-b border-gray-300 text-center">
-                    {val.status ? (
-                      <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full">
-                        Active
-                      </span>
-                    ) : (
-                      <span className="px-2 py-1 text-xs font-medium bg-red-100 text-red-700 rounded-full">
-                        Inactive
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3 border-b border-gray-300 text-center space-x-2">
-                    <Link
-                      to={`/dashboard/master/design-type/edit/${val.id}`}
-                      className="px-3 py-1 bg-blue-500 text-white text-xs rounded-lg shadow hover:bg-blue-600 transition"
-                    >
-                      Edit
-                    </Link>
-
-                    <button
-                      onClick={() => changeStatus(val.id)}
-                      disabled={statusLoading === val.id}
-                      
-                      className={`px-3 py-1 text-white text-xs rounded-lg shadow transition ${
-    statusLoading === val.id
-      ? "bg-gray-400 cursor-not-allowed"
-      : "bg-red-500 hover:bg-red-600"
-  }`}
-                    >
-                      {statusLoading === val.id ? <ButtonLoader text="Updating..." /> : "Change Status"}
-                    </button>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td
+                    colSpan={6}
+                    className="px-4 py-6 text-center text-gray-500 italic"
+                  >
+                    Loading ...
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td
-                  colSpan={5}
-                  className="px-4 py-6 text-center text-gray-500 italic"
-                >
-                  No Design Types found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    </div>
+              ) : design_types.length > 0 ? (
+                design_types.map((val, index) => (
+                  <tr
+                    key={val.id}
+                    className="hover:bg-gray-50 transition border-b border-gray-100"
+                  >
+                    <td className="px-4 py-3">
+                      {(currentPage - 1) * perPage + (index + 1)}
+                    </td>
+                    <td className="px-4 py-3">{val.title}</td>
+                    <td className="px-4 py-3">{val.short}</td>
+                    <td className="px-4 py-3 text-center">
+                      {val.status ? (
+                        <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full">
+                          Active
+                        </span>
+                      ) : (
+                        <span className="px-2 py-1 text-xs font-medium bg-red-100 text-red-700 rounded-full">
+                          Inactive
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      {new Date(val.created_at).toLocaleDateString("en-IN", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                        hour12: true,
+                      })}
+                    </td>
+                    <td className="px-4 py-3 text-center space-x-2">
+                      <Link
+                        to={`/master/design-type/edit/${val.id}`}
+                        className="px-3 py-1 bg-blue-500 text-white text-xs rounded-lg shadow hover:bg-blue-600 transition"
+                      >
+                        Edit
+                      </Link>
+                      <button
+                        onClick={() => changeStatus(val.id)}
+                        disabled={statusLoading === val.id}
+                        className={`px-3 py-1 text-white text-xs rounded-lg shadow transition ${
+                          statusLoading === val.id
+                            ? "bg-gray-400 cursor-not-allowed"
+                            : "bg-red-500 hover:bg-red-600"
+                        }`}
+                      >
+                        {statusLoading === val.id ? (
+                          <ButtonLoader text="Updating..." />
+                        ) : (
+                          "Change Status"
+                        )}
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={6}
+                    className="px-4 py-6 text-center text-gray-500 italic"
+                  >
+                    No Design Types found
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+    <Pagination
+  currentPage={currentPage}
+  perPage={perPage}
+  total={total}
+  lastPage={lastPage}
+  onPageChange={(page) => setCurrentPage(page)}
+/>
+  </div>
+</div>
+
   );
 }

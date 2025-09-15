@@ -1,6 +1,6 @@
 // import { useAuthStore } from "../store/authStore";
 // import { useNavigate } from "react-router-dom";
-import { Search, Grid, Mail, Bell, User, Edit3, RefreshCcw, LogOut, UserRound } from "lucide-react";
+import { Bell, User, Edit3, RefreshCcw, LogOut } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 export default function Header() {
