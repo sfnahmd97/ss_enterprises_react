@@ -10,9 +10,13 @@ import SettingsPage from "./pages/Settings";
 
 // Masters
 
-import MainDesignType from "./Masters/DesignType/Main";
+import ListDesignType from "./Masters/DesignType/List";
 import AddDesignType from "./Masters/DesignType/Add";
 import EditDesignType from "./Masters/DesignType/Edit";
+
+import ListColor from "./Masters/Color/List";
+import AddColor from "./Masters/Color/Add";
+import EditColor from "./Masters/Color/Edit";
 
 export default function App() {
   return (
@@ -45,11 +49,18 @@ export default function App() {
               <Layout>
                 <Routes>
                   {/* Design Type */}
-                  <Route path="design-type" element={<MainDesignType />} />
+                  <Route path="design-type" element={<ListDesignType />} />
                   <Route path="design-type/add" element={<AddDesignType />} />
                   <Route
                     path="design-type/edit/:id"
                     element={<EditDesignType />}
+                  />
+                  {/* Design Type */}
+                  <Route path="color" element={<ListColor />} />
+                  <Route path="color/add" element={<AddColor />} />
+                  <Route
+                    path="color/edit/:id"
+                    element={<EditColor />}
                   />
                 </Routes>
               </Layout>

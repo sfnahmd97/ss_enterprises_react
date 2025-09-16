@@ -17,3 +17,10 @@ export interface ListApiResponse<T> {
   data: T;
   meta: PaginationMeta;
 }
+
+ export interface Color {
+  id?: number;
+  title: string;
+  short: string;
+  status: boolean;
+}

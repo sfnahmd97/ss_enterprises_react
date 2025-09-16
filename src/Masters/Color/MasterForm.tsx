@@ -1,13 +1,13 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import type { FormikHelpers } from "formik";
 import * as Yup from "yup";
-import type { DesignType } from "../../interfaces/common";
+import type { Color } from "../../interfaces/common";
 
 interface Props {
-  initialValues: DesignType;
+  initialValues: Color;
   onSubmit: (
-    values: DesignType,
-    formikHelpers: FormikHelpers<DesignType>
+    values: Color,
+    formikHelpers: FormikHelpers<Color>
   ) => void;
   mode: "create" | "edit";
 }
@@ -27,7 +27,7 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
       {({ values, setFieldValue, errors, touched }) => (
         <Form className="max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 space-y-5">
           <h2 className="text-xl font-bold text-gray-800">
-            {mode === "create" ? "Add Design Type" : "Edit Design Type"}
+            {mode === "create" ? "Add Colour" : "Edit Colour"}
           </h2>
 
           <div>

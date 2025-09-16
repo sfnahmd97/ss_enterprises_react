@@ -7,6 +7,7 @@ import ButtonLoader from "../../components/common/ButtonLoader";
 import type { ListApiResponse } from "../../interfaces/common";
 import Swal from "sweetalert2";
 import Pagination from "../../components/common/Pagination";
+import { Pencil, ToggleLeft } from "lucide-react";
 
 export default function Main() {
   const [design_types, setDesignTypes] = useState<any[]>([]);
@@ -77,37 +78,65 @@ export default function Main() {
   }, [currentPage]);
 
   return (
-    <div className="p-6">
-  {/* Add Button (outside the card) */}
-  <div className="flex justify-end mb-4">
-    <Link
-      to="/master/design-type/add"
-      className="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition"
-    >
-      + Add
-    </Link>
-  </div>
+    <div className="p-4">
+      {/* Breadcrumbs */}
+      <div className="flex justify-between items-center mb-4">
+        <nav className="flex text-sm text-gray-600" aria-label="Breadcrumb">
+          <ol className="inline-flex items-center space-x-1 md:space-x-3">
+            <li>
+              <div className="inline-flex items-center">
+                  Masters
+              </div>
+            </li>
+            <li>
+              <div className="flex items-center">
+                <svg
+                  className="w-3 h-3 mx-2 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+                <span className="text-gray-700 font-medium">Design Type</span>
+              </div>
+            </li>
+          </ol>
+        </nav>
 
-  {/* Card */}
-  <div className="bg-white shadow rounded-xl border border-gray-200">
-    {/* Header with title + search box */}
-    <div className="flex flex-col md:flex-row md:justify-between md:items-center p-4 border-b border-gray-200 gap-3">
-      <h6 className="text-lg font-semibold text-gray-800">Design Type List</h6>
-      <input
-  type="text"
-  placeholder="Search..."
-  className="px-3 py-1.5 w-60 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
-  value={searchTerm}
-  onChange={(e) => {
-    setSearchTerm(e.target.value);
-    fetchDesignTypes(1, e.target.value);
-  }}
-/>
+        {/* Add Button */}
+        <Link
+          to="/master/design-type/add"
+          className="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition"
+        >
+          + Add
+        </Link>
+      </div>
 
-    </div>
+      <div className="bg-white shadow rounded-xl border border-gray-200">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center p-4 border-b border-gray-200 gap-3">
+          <h6 className="text-lg font-semibold text-gray-800">
+            Design Type List
+          </h6>
+          <input
+            type="text"
+            placeholder="Search..."
+            className="px-3 py-1.5 w-60 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              fetchDesignTypes(1, e.target.value);
+            }}
+          />
+        </div>
 
-    {/* Table */}
-    <div className="p-4 overflow-x-auto">
+        {/* Table */}
+        <div className="p-4 overflow-x-auto">
           <table className="w-full table-auto text-sm text-left">
             <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
               <tr>
@@ -165,23 +194,26 @@ export default function Main() {
                     <td className="px-4 py-3 text-center space-x-2">
                       <Link
                         to={`/master/design-type/edit/${val.id}`}
-                        className="px-3 py-1 bg-blue-500 text-white text-xs rounded-lg shadow hover:bg-blue-600 transition"
+                        className="inline-flex items-center justify-center p-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
+                        title="Edit"
                       >
-                        Edit
+                        <Pencil size={16} />
                       </Link>
+
                       <button
                         onClick={() => changeStatus(val.id)}
                         disabled={statusLoading === val.id}
-                        className={`px-3 py-1 text-white text-xs rounded-lg shadow transition ${
+                        className={`inline-flex items-center justify-center p-2 text-white rounded-lg shadow transition ${
                           statusLoading === val.id
                             ? "bg-gray-400 cursor-not-allowed"
                             : "bg-red-500 hover:bg-red-600"
                         }`}
+                        title="Change Status"
                       >
                         {statusLoading === val.id ? (
-                          <ButtonLoader text="Updating..." />
+                          <ButtonLoader text="" />
                         ) : (
-                          "Change Status"
+                          <ToggleLeft size={16} />
                         )}
                       </button>
                     </td>
@@ -201,15 +233,14 @@ export default function Main() {
           </table>
         </div>
 
-    <Pagination
-  currentPage={currentPage}
-  perPage={perPage}
-  total={total}
-  lastPage={lastPage}
-  onPageChange={(page) => setCurrentPage(page)}
-/>
-  </div>
-</div>
-
+        <Pagination
+          currentPage={currentPage}
+          perPage={perPage}
+          total={total}
+          lastPage={lastPage}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
+      </div>
+    </div>
   );
 }

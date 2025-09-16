@@ -1,29 +1,48 @@
+import { useEffect, useState } from "react";
+import { useNavigate, useParams,Link } from "react-router-dom";
 import MasterForm from "./MasterForm";
-import { useNavigate,Link } from "react-router-dom";
 import api from "../../lib/axios";
 import toast from "react-hot-toast";
 import type { FormikHelpers } from "formik";
-import type { DesignType } from "../../interfaces/common";
+import type { Color } from "../../interfaces/common";
 
 
-
-export default function addDesignType() {
+export default function editColor() {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const [initialValues, setInitialValues] = useState<Color | null>(null);
 
-  const handleSubmit = async (values: DesignType,{ setErrors }: FormikHelpers<DesignType>) => {
+
+  useEffect(() => {
+    const fetchColor = async () => {
+      try {
+        const res = await api.get(`/colors/${id}/edit`);
+        const data = (res.data as { data: any }).data;
+
+        setInitialValues({
+          ...data,
+          status: data.status === 1,
+        });
+      } catch (err) {
+        toast.error("Failed to load design type data");
+      }
+    };
+    if (id) fetchColor();
+  }, [id]);
+
+  const handleSubmit = async (values: Color,{ setErrors }: FormikHelpers<Color>) => {
     try {
-      const res = await api.post("/design-type", values);
+      const res =await api.put(`/colors/${id}`, values);
       const success = (res.data as { success: any[] }).success;
       const message = (res.data as { message: string }).message;
-
       if (success) {
         toast.success(message);
-        navigate("/master/design-type");
+        navigate("/master/color");
       } else {
         toast.error(message || "Something went wrong");
       }
     } catch (error: any) {
-     if (error.response?.data?.errors) {
+      if (error.response?.data?.errors) {
       const validationErrors = error.response.data.errors;
       const formattedErrors: Record<string, string> = {};
 
@@ -37,6 +56,8 @@ export default function addDesignType() {
     }
     }
   };
+
+  if (!initialValues) return <p>Loading...</p>;
 
   return (
     <div className="p-6">
@@ -67,7 +88,7 @@ export default function addDesignType() {
               to="/master/design-type"
               className="text-gray-500 hover:text-green-600 transition"
             >
-                Design Type
+                Colour 
                 </Link>
               </div>
             </li>
@@ -86,15 +107,15 @@ export default function addDesignType() {
                     d="M9 5l7 7-7 7"
                   />
                 </svg>
-                <span className="text-gray-700 font-medium">Add</span>
+                <span className="text-gray-700 font-medium">Edit</span>
               </div>
             </li>
           </ol>
         </nav>
     <MasterForm
-      initialValues={{ title: "", short: "", status: true }}
+      initialValues={initialValues}
       onSubmit={handleSubmit}
-      mode="create"
+      mode="edit"
     />
     </div>
   );

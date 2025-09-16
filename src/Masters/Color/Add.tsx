@@ -3,22 +3,22 @@ import { useNavigate,Link } from "react-router-dom";
 import api from "../../lib/axios";
 import toast from "react-hot-toast";
 import type { FormikHelpers } from "formik";
-import type { DesignType } from "../../interfaces/common";
+import type { Color } from "../../interfaces/common";
 
 
 
-export default function addDesignType() {
+export default function addColor() {
   const navigate = useNavigate();
 
-  const handleSubmit = async (values: DesignType,{ setErrors }: FormikHelpers<DesignType>) => {
+  const handleSubmit = async (values: Color,{ setErrors }: FormikHelpers<Color>) => {
     try {
-      const res = await api.post("/design-type", values);
+      const res = await api.post("/colors", values);
       const success = (res.data as { success: any[] }).success;
       const message = (res.data as { message: string }).message;
 
       if (success) {
         toast.success(message);
-        navigate("/master/design-type");
+        navigate("/master/color");
       } else {
         toast.error(message || "Something went wrong");
       }
@@ -64,10 +64,10 @@ export default function addDesignType() {
                   />
                 </svg>
                 <Link
-              to="/master/design-type"
+              to="/master/color"
               className="text-gray-500 hover:text-green-600 transition"
             >
-                Design Type
+                Colour
                 </Link>
               </div>
             </li>
