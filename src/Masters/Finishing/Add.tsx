@@ -1,48 +1,29 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams,Link } from "react-router-dom";
 import MasterForm from "./MasterForm";
+import { useNavigate,Link } from "react-router-dom";
 import api from "../../lib/axios";
 import toast from "react-hot-toast";
 import type { FormikHelpers } from "formik";
-import type { Color } from "../../interfaces/common";
+import type { Finishing } from "../../interfaces/common";
 
 
-export default function editColor() {
+
+export default function addFinishing() {
   const navigate = useNavigate();
-  const { id } = useParams();
-  const [initialValues, setInitialValues] = useState<Color | null>(null);
 
-
-  useEffect(() => {
-    const fetchColor = async () => {
-      try {
-        const res = await api.get(`/colors/${id}/edit`);
-        const data = (res.data as { data: any }).data;
-
-        setInitialValues({
-          ...data,
-          status: data.status === 1,
-        });
-      } catch (err) {
-        toast.error("Failed to load design type data");
-      }
-    };
-    if (id) fetchColor();
-  }, [id]);
-
-  const handleSubmit = async (values: Color,{ setErrors }: FormikHelpers<Color>) => {
+  const handleSubmit = async (values: Finishing,{ setErrors }: FormikHelpers<Finishing>) => {
     try {
-      const res =await api.put(`/colors/${id}`, values);
+      const res = await api.post("/finishing", values);
       const success = (res.data as { success: any[] }).success;
       const message = (res.data as { message: string }).message;
+
       if (success) {
         toast.success(message);
-        navigate("/master/color");
+        navigate("/master/finishing");
       } else {
         toast.error(message || "Something went wrong");
       }
     } catch (error: any) {
-      if (error.response?.data?.errors) {
+     if (error.response?.data?.errors) {
       const validationErrors = error.response.data.errors;
       const formattedErrors: Record<string, string> = {};
 
@@ -56,8 +37,6 @@ export default function editColor() {
     }
     }
   };
-
-  if (!initialValues) return <p>Loading...</p>;
 
   return (
     <div className="p-6">
@@ -85,10 +64,10 @@ export default function editColor() {
                   />
                 </svg>
                 <Link
-              to="/master/color"
+              to="/master/finishing"
               className="text-gray-500 hover:text-green-600 transition"
             >
-                Colour 
+                Finishing
                 </Link>
               </div>
             </li>
@@ -107,15 +86,15 @@ export default function editColor() {
                     d="M9 5l7 7-7 7"
                   />
                 </svg>
-                <span className="text-gray-700 font-medium">Edit</span>
+                <span className="text-gray-700 font-medium">Add</span>
               </div>
             </li>
           </ol>
         </nav>
     <MasterForm
-      initialValues={initialValues}
+      initialValues={{ title: "", status: true }}
       onSubmit={handleSubmit}
-      mode="edit"
+      mode="create"
     />
     </div>
   );

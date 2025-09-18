@@ -18,6 +18,10 @@ import ListColor from "./Masters/Color/List";
 import AddColor from "./Masters/Color/Add";
 import EditColor from "./Masters/Color/Edit";
 
+import ListFinishing from "./Masters/Finishing/List";
+import AddFinishing from "./Masters/Finishing/Add";
+import EditFinishing from "./Masters/Finishing/Edit";
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -51,17 +55,19 @@ export default function App() {
                   {/* Design Type */}
                   <Route path="design-type" element={<ListDesignType />} />
                   <Route path="design-type/add" element={<AddDesignType />} />
-                  <Route
-                    path="design-type/edit/:id"
-                    element={<EditDesignType />}
-                  />
-                  {/* Design Type */}
+                  <Route path="design-type/edit/:id" element={<EditDesignType />}/>
+
+                  {/* Color */}
                   <Route path="color" element={<ListColor />} />
                   <Route path="color/add" element={<AddColor />} />
-                  <Route
-                    path="color/edit/:id"
-                    element={<EditColor />}
-                  />
+                  <Route path="color/edit/:id" element={<EditColor />}/>
+
+                  {/* Finishing */}
+                  <Route path="finishing" element={<ListFinishing />} />
+                  <Route path="finishing/add" element={<AddFinishing />} />
+                  <Route path="finishing/edit/:id" element={<EditFinishing />}/>
+                  
+                  
                 </Routes>
               </Layout>
             </ProtectedRoute>

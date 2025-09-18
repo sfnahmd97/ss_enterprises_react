@@ -15,7 +15,7 @@ export default function Main() {
   const [statusLoading, setStatusLoading] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // pagination states
+  // pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [total, setTotal] = useState(0);
@@ -26,7 +26,7 @@ export default function Main() {
       setLoading(true);
 
       const params: any = { page, per_page: perPage };
-      if (search) params.title = search;
+      if (search) params.search_key = search;
       const res = await api.get<ListApiResponse<any[]>>(`/colors`, {
         params,
       });

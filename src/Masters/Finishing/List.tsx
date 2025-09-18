@@ -10,30 +10,30 @@ import Pagination from "../../components/common/Pagination";
 import { Pencil, ToggleLeft } from "lucide-react";
 
 export default function Main() {
-  const [design_types, setDesignTypes] = useState<any[]>([]);
+  const [finishings, setFinishing] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusLoading, setStatusLoading] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // pagination 
+  // pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [total, setTotal] = useState(0);
   const [lastPage, setLastPage] = useState(1);
 
-  const fetchDesignTypes = async (page = 1, search = "") => {
+  const fetchFinishing = async (page = 1, search = "") => {
     try {
       setLoading(true);
 
       const params: any = { page, per_page: perPage };
       if (search) params.search_key = search;
-      const res = await api.get<ListApiResponse<any[]>>(`/design-type`, {
+      const res = await api.get<ListApiResponse<any[]>>(`/finishing`, {
         params,
       });
 
       const response = res.data;
 
-      setDesignTypes(response.data);
+      setFinishing(response.data);
       setCurrentPage(response.meta.current_page);
       setPerPage(response.meta.per_page);
       setTotal(response.meta.total);
@@ -56,10 +56,10 @@ export default function Main() {
       async () => {
         try {
           setStatusLoading(id);
-          const res = await api.put(`/design-type/change-status/${id}`);
+          const res = await api.put(`/finishing/change-status/${id}`);
           const message = (res.data as { message: string }).message;
           toast.success(message);
-          fetchDesignTypes(currentPage);
+          fetchFinishing(currentPage);
         } catch (error: any) {
           console.error("Failed to change status:", error);
           toast.error(error.response?.data?.message);
@@ -74,7 +74,7 @@ export default function Main() {
   };
 
   useEffect(() => {
-    fetchDesignTypes(currentPage);
+    fetchFinishing(currentPage);
   }, [currentPage]);
 
   return (
@@ -103,7 +103,7 @@ export default function Main() {
                     d="M9 5l7 7-7 7"
                   />
                 </svg>
-                <span className="text-gray-700 font-medium">Design Type</span>
+                <span className="text-gray-700 font-medium">Finishing</span>
               </div>
             </li>
           </ol>
@@ -111,7 +111,7 @@ export default function Main() {
 
         {/* Add Button */}
         <Link
-          to="/master/design-type/add"
+          to="/master/finishing/add"
           className="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition"
         >
           + Add
@@ -121,7 +121,7 @@ export default function Main() {
       <div className="bg-white shadow rounded-xl border border-gray-200">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center p-4 border-b border-gray-200 gap-3">
           <h6 className="text-lg font-semibold text-gray-800">
-            Design Type List
+            Finishing List
           </h6>
           <input
             type="text"
@@ -130,7 +130,7 @@ export default function Main() {
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
-              fetchDesignTypes(1, e.target.value);
+              fetchFinishing(1, e.target.value);
             }}
           />
         </div>
@@ -142,7 +142,6 @@ export default function Main() {
               <tr>
                 <th className="px-4 py-3">#</th>
                 <th className="px-4 py-3">Name</th>
-                <th className="px-4 py-3">Short</th>
                 <th className="px-4 py-3 text-center">Status</th>
                 <th className="px-4 py-3 text-center">Created at</th>
                 <th className="px-4 py-3 text-center">Actions</th>
@@ -158,8 +157,8 @@ export default function Main() {
                     Loading ...
                   </td>
                 </tr>
-              ) : design_types.length > 0 ? (
-                design_types.map((val, index) => (
+              ) : finishings.length > 0 ? (
+                finishings.map((val, index) => (
                   <tr
                     key={val.id}
                     className="hover:bg-gray-50 transition border-b border-gray-100"
@@ -168,7 +167,6 @@ export default function Main() {
                       {(currentPage - 1) * perPage + (index + 1)}
                     </td>
                     <td className="px-4 py-3">{val.title}</td>
-                    <td className="px-4 py-3">{val.short}</td>
                     <td className="px-4 py-3 text-center">
                       {val.status ? (
                         <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full">
@@ -193,7 +191,7 @@ export default function Main() {
                     </td>
                     <td className="px-4 py-3 text-center space-x-2">
                       <Link
-                        to={`/master/design-type/edit/${val.id}`}
+                        to={`/master/finishing/edit/${val.id}`}
                         className="inline-flex items-center justify-center p-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
                         title="Edit"
                       >

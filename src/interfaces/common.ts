@@ -24,3 +24,9 @@ export interface ListApiResponse<T> {
   short: string;
   status: boolean;
 }
+
+ export interface Finishing {
+  id?: number;
+  title: string;
+  status: boolean;
+}

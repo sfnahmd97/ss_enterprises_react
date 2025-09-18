@@ -4,19 +4,19 @@ import MasterForm from "./MasterForm";
 import api from "../../lib/axios";
 import toast from "react-hot-toast";
 import type { FormikHelpers } from "formik";
-import type { Color } from "../../interfaces/common";
+import type { Finishing } from "../../interfaces/common";
 
 
-export default function editColor() {
+export default function editFinishing() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [initialValues, setInitialValues] = useState<Color | null>(null);
+  const [initialValues, setInitialValues] = useState<Finishing | null>(null);
 
 
   useEffect(() => {
-    const fetchColor = async () => {
+    const fetchFinishing = async () => {
       try {
-        const res = await api.get(`/colors/${id}/edit`);
+        const res = await api.get(`/finishing/${id}/edit`);
         const data = (res.data as { data: any }).data;
 
         setInitialValues({
@@ -27,17 +27,17 @@ export default function editColor() {
         toast.error("Failed to load design type data");
       }
     };
-    if (id) fetchColor();
+    if (id) fetchFinishing();
   }, [id]);
 
-  const handleSubmit = async (values: Color,{ setErrors }: FormikHelpers<Color>) => {
+  const handleSubmit = async (values: Finishing,{ setErrors }: FormikHelpers<Finishing>) => {
     try {
-      const res =await api.put(`/colors/${id}`, values);
+      const res =await api.put(`/finishing/${id}`, values);
       const success = (res.data as { success: any[] }).success;
       const message = (res.data as { message: string }).message;
       if (success) {
         toast.success(message);
-        navigate("/master/color");
+        navigate("/master/finishing");
       } else {
         toast.error(message || "Something went wrong");
       }
@@ -85,7 +85,7 @@ export default function editColor() {
                   />
                 </svg>
                 <Link
-              to="/master/color"
+              to="/master/design-type"
               className="text-gray-500 hover:text-green-600 transition"
             >
                 Colour 

@@ -6,8 +6,9 @@ import {
   ChevronRight,
   ChevronDown,
   Box,
-  FileText,
+  PaintRoller,
   Shield,
+  Palette,
 } from "lucide-react";
 
 interface MenuItem {
@@ -31,7 +32,8 @@ const sections: Section[] = [
     title: "MASTERS",
     items: [
       { name: "Design Type", path: "/master/design-type", icon: <Shield size={18} /> },
-      { name: "Colours", path: "/master/color", icon: <FileText size={18} /> },
+      { name: "Colours", path: "/master/color", icon: <Palette size={18} /> },
+      { name: "Finishing", path: "/master/finishing", icon: <PaintRoller size={18} /> },
     ],
   },
 ];
