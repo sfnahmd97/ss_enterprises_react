@@ -30,3 +30,8 @@ export interface ListApiResponse<T> {
   title: string;
   status: boolean;
 }
+
+export interface UserData {
+  name: string;
+  email: string;
+}

@@ -225,7 +225,7 @@ export default function Main() {
                     colSpan={6}
                     className="px-4 py-6 text-center text-gray-500 italic"
                   >
-                    No Design Types found
+                    Data not found.
                   </td>
                 </tr>
               )}
