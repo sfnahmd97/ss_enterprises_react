@@ -103,7 +103,7 @@ export default function Main() {
                     d="M9 5l7 7-7 7"
                   />
                 </svg>
-                <span className="text-gray-700 font-medium">Finishing</span>
+                <span className="text-gray-700 font-medium">Lamination</span>
               </div>
             </li>
           </ol>
@@ -121,7 +121,7 @@ export default function Main() {
       <div className="bg-white shadow rounded-xl border border-gray-200">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center p-4 border-b border-gray-200 gap-3">
           <h6 className="text-lg font-semibold text-gray-800">
-            Finishing List
+            Lamination List
           </h6>
           <input
             type="text"
@@ -142,6 +142,7 @@ export default function Main() {
               <tr>
                 <th className="px-4 py-3">#</th>
                 <th className="px-4 py-3">Name</th>
+                <th className="px-4 py-3">Short</th>
                 <th className="px-4 py-3 text-center">Status</th>
                 <th className="px-4 py-3 text-center">Created at</th>
                 <th className="px-4 py-3 text-center">Actions</th>
@@ -167,6 +168,7 @@ export default function Main() {
                       {(currentPage - 1) * perPage + (index + 1)}
                     </td>
                     <td className="px-4 py-3">{val.title}</td>
+                    <td className="px-4 py-3">{val.short}</td>
                     <td className="px-4 py-3 text-center">
                       {val.status ? (
                         <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full">

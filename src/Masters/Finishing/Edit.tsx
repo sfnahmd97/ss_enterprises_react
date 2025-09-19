@@ -88,7 +88,7 @@ export default function editFinishing() {
               to="/master/design-type"
               className="text-gray-500 hover:text-green-600 transition"
             >
-                Colour 
+                Lamination 
                 </Link>
               </div>
             </li>

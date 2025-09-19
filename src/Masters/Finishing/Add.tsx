@@ -67,7 +67,7 @@ export default function addFinishing() {
               to="/master/finishing"
               className="text-gray-500 hover:text-green-600 transition"
             >
-                Finishing
+                Lamination
                 </Link>
               </div>
             </li>
@@ -92,7 +92,7 @@ export default function addFinishing() {
           </ol>
         </nav>
     <MasterForm
-      initialValues={{ title: "", status: true }}
+      initialValues={{ title: "",short:"", status: true }}
       onSubmit={handleSubmit}
       mode="create"
     />

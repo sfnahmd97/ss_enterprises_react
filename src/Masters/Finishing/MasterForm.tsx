@@ -14,6 +14,7 @@ interface Props {
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required("Please enter Name"),
+  short: Yup.string().required("Please enter Short Code"),
 });
 
 export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
@@ -26,7 +27,7 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
       {({ values, setFieldValue, errors, touched }) => (
         <Form className="max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 space-y-5">
           <h2 className="text-xl font-bold text-gray-800">
-            {mode === "create" ? "Add Finishing" : "Edit Finishing"}
+            {mode === "create" ? "Add Lamination" : "Edit Lamination"}
           </h2>
 
           <div>
@@ -51,7 +52,28 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
             />
           </div>
 
-          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Short
+            </label>
+            <Field
+              type="text"
+              name="short"
+              placeholder="Enter Short"
+              className={`w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none 
+                ${
+                  errors.short && touched.short
+                    ? "border-red-500"
+                    : "border-gray-300"
+                }`}
+            />
+            <ErrorMessage
+              name="short"
+              component="div"
+              className="text-red-500 text-sm mt-1"
+            />
+          </div>
+
           <div className="flex items-center gap-2">
             <input
               type="checkbox"
