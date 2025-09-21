@@ -22,6 +22,10 @@ import ListFinishing from "./Masters/Finishing/List";
 import AddFinishing from "./Masters/Finishing/Add";
 import EditFinishing from "./Masters/Finishing/Edit";
 
+import ListDoorPartSize from "./Masters/DoorPartSize/List";
+import AddDoorPartSize from "./Masters/DoorPartSize/Add";
+import EditDoorPartSize from "./Masters/DoorPartSize/Edit";
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -66,6 +70,11 @@ export default function App() {
                   <Route path="finishing" element={<ListFinishing />} />
                   <Route path="finishing/add" element={<AddFinishing />} />
                   <Route path="finishing/edit/:id" element={<EditFinishing />}/>
+
+                  {/* Finishing */}
+                  <Route path="door-part-size" element={<ListDoorPartSize />} />
+                  <Route path="door-part-size/add" element={<AddDoorPartSize />} />
+                  <Route path="door-part-size/edit/:id" element={<EditDoorPartSize />}/>
                   
                   
                 </Routes>

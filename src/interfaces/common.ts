@@ -36,3 +36,15 @@ export interface UserData {
   name: string;
   email: string;
 }
+
+export interface DoorPart {
+  id: number;
+  part_name: string;
+}
+ export interface DoorPartSize {
+  id?: number;
+  size: string;
+  door_part_id: number | "";
+  status: boolean;
+  doorPart?: DoorPart;
+}

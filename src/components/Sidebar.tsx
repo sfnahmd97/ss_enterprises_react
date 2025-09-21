@@ -9,6 +9,7 @@ import {
   PaintRoller,
   Shield,
   Palette,
+  Ruler,
 } from "lucide-react";
 
 interface MenuItem {
@@ -34,6 +35,7 @@ const sections: Section[] = [
       { name: "Design Type", path: "/master/design-type", icon: <Shield size={18} /> },
       { name: "Colours", path: "/master/color", icon: <Palette size={18} /> },
       { name: "Lamination", path: "/master/finishing", icon: <PaintRoller size={18} /> },
+      { name: "Door Part Size", path: "/master/door-part-size", icon: <Ruler size={18} /> },
     ],
   },
 ];
