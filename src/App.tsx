@@ -26,6 +26,10 @@ import ListDoorPartSize from "./Masters/DoorPartSize/List";
 import AddDoorPartSize from "./Masters/DoorPartSize/Add";
 import EditDoorPartSize from "./Masters/DoorPartSize/Edit";
 
+import ListDesign from "./Masters/Design/List";
+import AddDesign from "./Masters/Design/Add";
+import EditDesign from "./Masters/Design/Edit";
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -75,7 +79,11 @@ export default function App() {
                   <Route path="door-part-size" element={<ListDoorPartSize />} />
                   <Route path="door-part-size/add" element={<AddDoorPartSize />} />
                   <Route path="door-part-size/edit/:id" element={<EditDoorPartSize />}/>
-                  
+
+                  {/* Designs */}
+                  <Route path="design" element={<ListDesign />} />
+                  <Route path="design/add" element={<AddDesign />} />
+                  <Route path="design/edit/:id" element={<EditDesign />}/>
                   
                 </Routes>
               </Layout>

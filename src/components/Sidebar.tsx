@@ -10,6 +10,7 @@ import {
   Shield,
   Palette,
   Ruler,
+  DoorOpen,
 } from "lucide-react";
 
 interface MenuItem {
@@ -36,6 +37,7 @@ const sections: Section[] = [
       { name: "Colours", path: "/master/color", icon: <Palette size={18} /> },
       { name: "Lamination", path: "/master/finishing", icon: <PaintRoller size={18} /> },
       { name: "Door Part Size", path: "/master/door-part-size", icon: <Ruler size={18} /> },
+      { name: "Design", path: "/master/design", icon: <DoorOpen size={18} /> },
     ],
   },
 ];
@@ -53,9 +55,12 @@ export default function Sidebar() {
   };
 
   const isActive = (path?: string) => {
-    if (!path) return false;
-    return location.pathname.startsWith(path);
-  };
+  if (!path) return false;
+
+  if (location.pathname === path) return true;
+
+  return location.pathname.startsWith(path + "/");
+};
 
   return (
     <aside className="bg-white h-screen flex flex-col transition-all duration-300">
