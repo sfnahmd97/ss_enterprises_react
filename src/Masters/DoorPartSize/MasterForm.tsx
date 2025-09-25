@@ -56,7 +56,7 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Size
+              Size <span className="text-red-500">*</span>
             </label>
             <Field
               type="text"
@@ -78,7 +78,7 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Door Part
+              Door Part <span className="text-red-500">*</span>
             </label>
             <Field
           as="select"

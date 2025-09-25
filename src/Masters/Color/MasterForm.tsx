@@ -32,7 +32,7 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Name
+              Name <span className="text-red-500">*</span>
             </label>
             <Field
               type="text"
@@ -54,7 +54,7 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Short
+              Short <span className="text-red-500">*</span>
             </label>
             <Field
               type="text"

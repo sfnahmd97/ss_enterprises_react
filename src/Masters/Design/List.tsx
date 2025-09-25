@@ -16,6 +16,8 @@ export default function Main() {
   const [statusLoading, setStatusLoading] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
+  const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
   // pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
@@ -266,90 +268,120 @@ export default function Main() {
 
       {showModal && (
         <AnimatePresence>
-          {/* Backdrop */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
-            onClick={() => setShowModal(false)} // close on backdrop click
-          />
+  initial={{ scale: 0.8, opacity: 0, y: 50 }}
+  animate={{ scale: 1, opacity: 1, y: 0 }}
+  exit={{ scale: 0.8, opacity: 0, y: 50 }}
+  transition={{ duration: 0.3, ease: "easeInOut" }}
+  className="fixed inset-0 flex items-center justify-center z-50 bg-black/50 backdrop-blur-sm z-40"
+>
+  <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 relative">
+    {/* Close Button */}
+    <button
+      onClick={() => setShowModal(false)}
+      className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 transition"
+    >
+      ✕
+    </button>
 
-          {/* Modal */}
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0, y: 50 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.8, opacity: 0, y: 50 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="fixed inset-0 flex items-center justify-center z-50"
-          >
-            <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6 relative">
-              {/* Close Button */}
-              <button
-                onClick={() => setShowModal(false)}
-                className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 transition"
-              >
-                ✕
-              </button>
+    {/* Heading */}
+    <h2 className="text-2xl font-bold text-gray-900 mb-4 border-b pb-3">
+      Design Details
+    </h2>
 
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                Design Details
-              </h2>
+    {modalLoading ? (
+      <p className="text-gray-500">Loading details...</p>
+    ) : selectedDesign ? (
+      <div className="space-y-5">
+        {/* Details Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-gray-50 rounded-lg p-3">
+            <p className="text-sm font-semibold text-gray-600">
+              Design Number
+            </p>
+            <p className="text-gray-900">
+              {selectedDesign.design_type_short}-{selectedDesign.design_number}
+            </p>
+          </div>
 
-              {modalLoading ? (
-                <p className="text-gray-500">Loading details...</p>
-              ) : selectedDesign ? (
-                <div className="space-y-3">
-                  <p>
-                    <span className="font-medium">Design Number:</span>{" "}
-                    {selectedDesign.design_type_short}-
-                    {selectedDesign.design_number}
-                  </p>
-                  <p>
-                    <span className="font-medium">Design Type:</span>{" "}
-                    {selectedDesign.design_type.title}
-                  </p>
-                  <p>
-                    <span className="font-medium">Door Color:</span>{" "}
-                    {selectedDesign.panel_color.title}
-                  </p>
-                  <p>
-                    <span className="font-medium">A Section Color:</span>{" "}
-                    {selectedDesign.a_section_color.title}
-                  </p>
-                  <p>
-                    <span className="font-medium">Frame Color:</span>{" "}
-                    {selectedDesign.frame_color.title}
-                  </p>
-                  <p>
-                    <span className="font-medium">Lamination:</span>{" "}
-                    {selectedDesign.finishing.title}
-                  </p>
-                  <p>
-                    <span className="font-medium">Status:</span>{" "}
-                    {selectedDesign.status ? "Active ✅" : "Inactive ❌"}
-                  </p>
-                  <p>
-                    <span className="font-medium">Created At:</span>{" "}
-                    {new Date(selectedDesign.created_at).toLocaleString(
-                      "en-IN"
-                    )}
-                  </p>
-                </div>
-              ) : (
-                <p className="text-red-500">No details available</p>
-              )}
+          <div className="bg-gray-50 rounded-lg p-3">
+            <p className="text-sm font-semibold text-gray-600">Design Type</p>
+            <p className="text-gray-900">{selectedDesign.design_type.title}</p>
+          </div>
 
-              <div className="mt-6 text-right">
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="px-5 py-2 bg-green-600 text-white rounded-xl shadow hover:bg-green-700 transition"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </motion.div>
+          <div className="bg-gray-50 rounded-lg p-3">
+            <p className="text-sm font-semibold text-gray-600">Door Color</p>
+            <p className="text-gray-900">{selectedDesign.panel_color.title}</p>
+          </div>
+
+          <div className="bg-gray-50 rounded-lg p-3">
+            <p className="text-sm font-semibold text-gray-600">
+              A Section Color
+            </p>
+            <p className="text-gray-900">
+              {selectedDesign.a_section_color.title}
+            </p>
+          </div>
+
+          <div className="bg-gray-50 rounded-lg p-3">
+            <p className="text-sm font-semibold text-gray-600">Frame Color</p>
+            <p className="text-gray-900">{selectedDesign.frame_color.title}</p>
+          </div>
+
+          <div className="bg-gray-50 rounded-lg p-3">
+            <p className="text-sm font-semibold text-gray-600">Lamination</p>
+            <p className="text-gray-900">{selectedDesign.finishing.title}</p>
+          </div>
+
+          <div className="bg-gray-50 rounded-lg p-3">
+            <p className="text-sm font-semibold text-gray-600">Status</p>
+            <p
+              className={`font-medium ${
+                selectedDesign.status ? "text-green-600" : "text-red-600"
+              }`}
+            >
+              {selectedDesign.status ? "Active ✅" : "Inactive ❌"}
+            </p>
+          </div>
+
+          <div className="bg-gray-50 rounded-lg p-3">
+            <p className="text-sm font-semibold text-gray-600">Created At</p>
+            <p className="text-gray-900">
+              {new Date(selectedDesign.created_at).toLocaleString("en-IN")}
+            </p>
+          </div>
+        </div>
+
+        {/* Image Section */}
+        <div>
+          <p className="text-sm font-semibold text-gray-600 mb-2">Image</p>
+          {selectedDesign.image ? (
+            <img
+              src={`${BASE_URL}/storage/${selectedDesign.image}`}
+              alt="Design Preview"
+              className="w-40 h-40 object-contain rounded-lg border shadow-sm bg-gray-50"
+            />
+          ) : (
+            <p className="text-gray-500 italic">N/A</p>
+          )}
+        </div>
+      </div>
+    ) : (
+      <p className="text-red-500">No details available</p>
+    )}
+
+    {/* Footer */}
+    <div className="mt-6 text-right border-t pt-4">
+      <button
+        onClick={() => setShowModal(false)}
+        className="px-5 py-2 bg-green-600 text-white rounded-xl shadow hover:bg-green-700 transition"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</motion.div>
+
         </AnimatePresence>
       )}
     </div>

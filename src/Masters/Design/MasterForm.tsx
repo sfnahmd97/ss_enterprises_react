@@ -100,7 +100,7 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Design Type
+                Design Type <span className="text-red-500">*</span>
               </label>
               <Field
                 as="select"
@@ -130,7 +130,7 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Design Number
+                Design Number <span className="text-red-500">*</span>
               </label>
               <Field
                 type="text"
@@ -152,7 +152,7 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Door Color
+                Door Color <span className="text-red-500">*</span>
               </label>
               <Field
                 as="select"
@@ -182,7 +182,7 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                A Section Color
+                A Section Color <span className="text-red-500">*</span>
               </label>
               <Field
                 as="select"
@@ -212,7 +212,7 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Frame Color
+                Frame Color <span className="text-red-500">*</span>
               </label>
               <Field
                 as="select"
@@ -242,7 +242,7 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Lamination
+                Lamination <span className="text-red-500">*</span>
               </label>
               <Field
                 as="select"
