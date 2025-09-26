@@ -11,7 +11,7 @@ import { Pencil, ToggleLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Main() {
-  const [employees, setEmployees] = useState<any[]>([]);
+  const [distributors, setDistributors] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusLoading, setStatusLoading] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -25,26 +25,26 @@ export default function Main() {
 
   // modal state
   const [showModal, setShowModal] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState<any | null>(null);
+  const [selectedDistributor, setSelectedDistributor] = useState<any | null>(null);
   const [modalLoading, setModalLoading] = useState(false);
 
-  const fetchEmployee = async (page = 1, search = "") => {
+  const fetchDistributor = async (page = 1, search = "") => {
     try {
       setLoading(true);
 
       const params: any = { page, per_page: perPage };
       if (search) params.search_key = search;
-      const res = await api.get<ListApiResponse<any[]>>(`/employee`, { params });
+      const res = await api.get<ListApiResponse<any[]>>(`/distributor`, { params });
 
       const response = res.data;
 
-      setEmployees(response.data);
+      setDistributors(response.data);
       setCurrentPage(response.meta.current_page);
       setPerPage(response.meta.per_page);
       setTotal(response.meta.total);
       setLastPage(response.meta.last_page);
     } catch (error: any) {
-      console.error("Failed to fetch employees:", error);
+      console.error("Failed to fetch distributors:", error);
       Swal.fire({
         icon: "error",
         title: "Oops!",
@@ -61,10 +61,10 @@ export default function Main() {
       async () => {
         try {
           setStatusLoading(id);
-          const res = await api.put(`/employee/change-status/${id}`);
+          const res = await api.put(`/distributor/change-status/${id}`);
           const message = (res.data as { message: string }).message;
           toast.success(message);
-          fetchEmployee(currentPage);
+          fetchDistributor(currentPage);
         } catch (error: any) {
           console.error("Failed to change status:", error);
           toast.error(error.response?.data?.message);
@@ -82,11 +82,11 @@ export default function Main() {
     try {
       setModalLoading(true);
       setShowModal(true);
-      const res = await api.get(`/employee/${id}`);
+      const res = await api.get(`/distributor/${id}`);
       const data = (res.data as { data: any }).data;
-      setSelectedEmployee(data);
+      setSelectedDistributor(data);
     } catch (error: any) {
-      console.error("Failed to fetch employee details:", error);
+      console.error("Failed to fetch distributor details:", error);
       toast.error("Failed to load details");
       setShowModal(false);
     } finally {
@@ -95,7 +95,7 @@ export default function Main() {
   };
 
   useEffect(() => {
-    fetchEmployee(currentPage);
+    fetchDistributor(currentPage);
   }, [currentPage]);
 
   return (
@@ -122,7 +122,7 @@ export default function Main() {
                     d="M9 5l7 7-7 7"
                   />
                 </svg>
-                <span className="text-gray-700 font-medium">Employee</span>
+                <span className="text-gray-700 font-medium">Distributor</span>
               </div>
             </li>
           </ol>
@@ -130,7 +130,7 @@ export default function Main() {
 
         {/* Add Button */}
         <Link
-          to="/master/employee/add"
+          to="/master/distributor/add"
           className="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition"
         >
           + Add
@@ -139,7 +139,7 @@ export default function Main() {
 
       <div className="bg-white shadow rounded-xl border border-gray-200">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center p-4 border-b border-gray-200 gap-3">
-          <h6 className="text-lg font-semibold text-gray-800">Employee List</h6>
+          <h6 className="text-lg font-semibold text-gray-800">Distributor List</h6>
           <input
             type="text"
             placeholder="Search..."
@@ -147,7 +147,7 @@ export default function Main() {
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
-              fetchEmployee(1, e.target.value);
+              fetchDistributor(1, e.target.value);
             }}
           />
         </div>
@@ -160,7 +160,7 @@ export default function Main() {
                 <th className="px-4 py-3">#</th>
                 <th className="px-4 py-3">Name</th>
                 <th className="px-4 py-3">Phone No.</th>
-                <th className="px-4 py-3">Designation</th>
+                <th className="px-4 py-3">Area</th>
                 <th className="px-4 py-3 text-center">Status</th>
                 <th className="px-4 py-3 text-center">Created at</th>
                 <th className="px-4 py-3 text-center">Actions</th>
@@ -176,8 +176,8 @@ export default function Main() {
                     Loading ...
                   </td>
                 </tr>
-              ) : employees.length > 0 ? (
-                employees.map((val, index) => (
+              ) : distributors.length > 0 ? (
+                distributors.map((val, index) => (
                   <tr
                     key={val.id}
                     onClick={() => openModal(val.id)} // 👈 open modal when row clicked
@@ -188,7 +188,7 @@ export default function Main() {
                     </td>
                     <td className="px-4 py-3">{val.name}</td>
                     <td className="px-4 py-3">{val.phone_no}</td>
-                    <td className="px-4 py-3">{val.designation_label}</td>
+                    <td className="px-4 py-3">{val.area}</td>
                     <td className="px-4 py-3 text-center">
                       {val.status ? (
                         <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full">
@@ -216,7 +216,7 @@ export default function Main() {
                       onClick={(e) => e.stopPropagation()} // prevent row click from firing when clicking buttons
                     >
                       <Link
-                        to={`/master/employee/edit/${val.id}`}
+                        to={`/master/distributor/edit/${val.id}`}
                         className="inline-flex items-center justify-center p-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
                         title="Edit"
                       >
@@ -284,12 +284,12 @@ export default function Main() {
     </button>
 
     <h2 className="text-2xl font-bold text-gray-900 mb-4 border-b pb-3">
-      Employee Details
+      Distributor Details
     </h2>
 
     {modalLoading ? (
       <p className="text-gray-500">Loading details...</p>
-    ) : selectedEmployee ? (
+    ) : selectedDistributor ? (
       <div className="space-y-5">
         {/* Details Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -298,28 +298,28 @@ export default function Main() {
               Name
             </p>
             <p className="text-gray-900">
-              {selectedEmployee.name}
+              {selectedDistributor.name}
             </p>
           </div>
 
           <div className="bg-gray-50 rounded-lg p-3">
-            <p className="text-sm font-semibold text-gray-600">Designation</p>
-            <p className="text-gray-900">{selectedEmployee.designation_label}</p>
-          </div>
-
-          <div className="bg-gray-50 rounded-lg p-3">
             <p className="text-sm font-semibold text-gray-600">email</p>
-            <p className="text-gray-900">{selectedEmployee.email}</p>
+            <p className="text-gray-900">{selectedDistributor.email}</p>
           </div>
 
           <div className="bg-gray-50 rounded-lg p-3">
             <p className="text-sm font-semibold text-gray-600">Phone No</p>
-            <p className="text-gray-900">{selectedEmployee.phone_no}</p>
+            <p className="text-gray-900">{selectedDistributor.phone_no}</p>
           </div>
 
           <div className="bg-gray-50 rounded-lg p-3">
             <p className="text-sm font-semibold text-gray-600">Address</p>
-            <p className="text-gray-900">{selectedEmployee.address}</p>
+            <p className="text-gray-900">{selectedDistributor.address}</p>
+          </div>
+
+          <div className="bg-gray-50 rounded-lg p-3">
+            <p className="text-sm font-semibold text-gray-600">Area</p>
+            <p className="text-gray-900">{selectedDistributor.area}</p>
           </div>
 
 
@@ -327,17 +327,17 @@ export default function Main() {
             <p className="text-sm font-semibold text-gray-600">Status</p>
             <p
               className={`font-medium ${
-                selectedEmployee.status ? "text-green-600" : "text-red-600"
+                selectedDistributor.status ? "text-green-600" : "text-red-600"
               }`}
             >
-              {selectedEmployee.status ? "Active ✅" : "Inactive ❌"}
+              {selectedDistributor.status ? "Active ✅" : "Inactive ❌"}
             </p>
           </div>
 
           <div className="bg-gray-50 rounded-lg p-3">
             <p className="text-sm font-semibold text-gray-600">Created At</p>
             <p className="text-gray-900">
-              {new Date(selectedEmployee.created_at).toLocaleString("en-IN")}
+              {new Date(selectedDistributor.created_at).toLocaleString("en-IN")}
             </p>
           </div>
         </div>

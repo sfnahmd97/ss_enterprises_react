@@ -4,22 +4,22 @@ import MasterForm from "./MasterForm";
 import api from "../../lib/axios";
 import toast from "react-hot-toast";
 import type { FormikHelpers } from "formik";
-import type { Employee } from "../../interfaces/common";
+import type { Distributor } from "../../interfaces/common";
 import PageLoader from "../../components/common/pageLoader";
 
 export default function editEmployee() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [initialValues, setInitialValues] = useState<Employee | null>(null);
+  const [initialValues, setInitialValues] = useState<Distributor | null>(null);
     const [loading, setLoading] = useState(true);
   
 
   useEffect(() => {
-    const fetchEmployee = async () => {
+    const fetchDistributor = async () => {
       try {
         setLoading(true);
 
-        const res = await api.get(`/employee/${id}/edit`);
+        const res = await api.get(`/distributor/${id}/edit`);
         const data = (res.data as { data: any }).data;
 
         setInitialValues({
@@ -27,25 +27,25 @@ export default function editEmployee() {
           status: data.status === 1,
         });
       } catch (err) {
-        toast.error("Failed to load Employee data");
+        toast.error("Failed to load Distributor data");
       }finally {
       setLoading(false); 
     }
     };
-    if (id) fetchEmployee();
+    if (id) fetchDistributor();
   }, [id]);
 
   const handleSubmit = async (
-    values: Employee,
-    { setErrors }: FormikHelpers<Employee>
+    values: Distributor,
+    { setErrors }: FormikHelpers<Distributor>
   ) => {
     try {
-      const res = await api.put(`/employee/${id}`, values);
+      const res = await api.put(`/distributor/${id}`, values);
       const success = (res.data as { success: any[] }).success;
       const message = (res.data as { message: string }).message;
       if (success) {
         toast.success(message);
-        navigate("/master/employee");
+        navigate("/master/distributor");
       } else {
         toast.error(message || "Something went wrong");
       }
@@ -91,10 +91,10 @@ export default function editEmployee() {
                 />
               </svg>
               <Link
-                to="/master/employee"
+                to="/master/distributor"
                 className="text-gray-500 hover:text-green-600 transition"
               >
-                Employee
+                Distributor
               </Link>
             </div>
           </li>

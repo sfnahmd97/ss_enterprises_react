@@ -1,51 +1,39 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
 import MasterForm from "./MasterForm";
+import { useNavigate, Link } from "react-router-dom";
 import api from "../../lib/axios";
 import toast from "react-hot-toast";
 import type { FormikHelpers } from "formik";
-import type { Employee } from "../../interfaces/common";
-import PageLoader from "../../components/common/pageLoader";
+import type { Distributor } from "../../interfaces/common";
 
-export default function editEmployee() {
+export default function addDoorPartSize() {
   const navigate = useNavigate();
-  const { id } = useParams();
-  const [initialValues, setInitialValues] = useState<Employee | null>(null);
-    const [loading, setLoading] = useState(true);
-  
-
-  useEffect(() => {
-    const fetchEmployee = async () => {
-      try {
-        setLoading(true);
-
-        const res = await api.get(`/employee/${id}/edit`);
-        const data = (res.data as { data: any }).data;
-
-        setInitialValues({
-          ...data,
-          status: data.status === 1,
-        });
-      } catch (err) {
-        toast.error("Failed to load Employee data");
-      }finally {
-      setLoading(false); 
-    }
-    };
-    if (id) fetchEmployee();
-  }, [id]);
 
   const handleSubmit = async (
-    values: Employee,
-    { setErrors }: FormikHelpers<Employee>
+    values: Distributor,
+    { setErrors }: FormikHelpers<Distributor>
   ) => {
     try {
-      const res = await api.put(`/employee/${id}`, values);
+      const formData = new FormData();
+
+      Object.keys(values).forEach((key) => {
+        const value = (values as any)[key];
+
+         if (key === "status") {
+          formData.append("status", value ? "1" : "0");
+        } else if (value !== null && value !== undefined) {
+          formData.append(key, value);
+        }
+      });
+
+      const res = await api.post("/distributor", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       const success = (res.data as { success: any[] }).success;
       const message = (res.data as { message: string }).message;
+
       if (success) {
         toast.success(message);
-        navigate("/master/employee");
+        navigate("/master/distributor");
       } else {
         toast.error(message || "Something went wrong");
       }
@@ -65,11 +53,9 @@ export default function editEmployee() {
     }
   };
 
-  if (loading) return <PageLoader />;
-  if (!initialValues) return <p>Loading...</p>;
-
   return (
     <div className="p-6">
+      {/* Breadcrumbs */}
       <nav className="flex text-sm text-gray-600" aria-label="Breadcrumb">
         <ol className="inline-flex items-center space-x-1 md:space-x-3">
           <li>
@@ -91,10 +77,10 @@ export default function editEmployee() {
                 />
               </svg>
               <Link
-                to="/master/employee"
+                to="/master/distributor"
                 className="text-gray-500 hover:text-green-600 transition"
               >
-                Employee
+                Distributor
               </Link>
             </div>
           </li>
@@ -113,15 +99,22 @@ export default function editEmployee() {
                   d="M9 5l7 7-7 7"
                 />
               </svg>
-              <span className="text-gray-700 font-medium">Edit</span>
+              <span className="text-gray-700 font-medium">Add</span>
             </div>
           </li>
         </ol>
       </nav>
       <MasterForm
-        initialValues={initialValues}
+        initialValues={{
+          name: "",
+          phone_no: "",
+          email: "",
+          address: "",
+          area: "",
+          status: true,
+        }}
         onSubmit={handleSubmit}
-        mode="edit"
+        mode="create"
       />
     </div>
   );

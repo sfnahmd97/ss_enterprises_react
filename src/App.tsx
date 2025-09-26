@@ -34,6 +34,10 @@ import ListEmployee from "./Masters/Employee/List";
 import AddEmployee from "./Masters/Employee/Add";
 import EditEmployee from "./Masters/Employee/Edit";
 
+import ListDistributor from "./Masters/Distributor/List";
+import AddDistributor from "./Masters/Distributor/Add";
+import EditDistributor from "./Masters/Distributor/Edit";
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -89,10 +93,15 @@ export default function App() {
                   <Route path="design/add" element={<AddDesign />} />
                   <Route path="design/edit/:id" element={<EditDesign />}/>
 
-                  {/* Designs */}
+                  {/* Employee */}
                   <Route path="employee" element={<ListEmployee />} />
                   <Route path="employee/add" element={<AddEmployee />} />
                   <Route path="employee/edit/:id" element={<EditEmployee />}/>
+
+                  {/* Distributor */}
+                  <Route path="distributor" element={<ListDistributor />} />
+                  <Route path="distributor/add" element={<AddDistributor />} />
+                  <Route path="distributor/edit/:id" element={<EditDistributor />}/>
                   
                 </Routes>
               </Layout>

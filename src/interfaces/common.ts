@@ -78,3 +78,13 @@ export interface Design {
   designation_label?: string;
   status?: boolean;
 }
+
+export interface Distributor {
+  id?: number;
+  name: string;
+  phone_no: string;
+  email: string;
+  address: string;
+  area: string;
+  status?: boolean;
+}

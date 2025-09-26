@@ -12,6 +12,7 @@ import {
   Ruler,
   DoorOpen,
   UsersRound,
+  Bus,
 } from "lucide-react";
 
 interface MenuItem {
@@ -40,6 +41,7 @@ const sections: Section[] = [
       { name: "Door Part Size", path: "/master/door-part-size", icon: <Ruler size={18} /> },
       { name: "Design", path: "/master/design", icon: <DoorOpen size={18} /> },
       { name: "Employee", path: "/master/employee", icon: <UsersRound size={18} /> },
+      { name: "Distributor", path: "/master/distributor", icon: <Bus size={18} /> },
     ],
   },
 ];

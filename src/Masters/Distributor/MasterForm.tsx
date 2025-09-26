@@ -1,13 +1,15 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import type { FormikHelpers } from "formik";
 import * as Yup from "yup";
-import type { Employee } from "../../interfaces/common";
-import api from "../../lib/axios";
+import type { Distributor } from "../../interfaces/common";
 
 interface Props {
-  initialValues: Employee;
-  onSubmit: (values: Employee, formikHelpers: FormikHelpers<Employee>) => void;
+  initialValues: Distributor;
+  onSubmit: (
+    values: Distributor,
+    formikHelpers: FormikHelpers<Distributor>
+  ) => void;
   mode: "create" | "edit";
 }
 
@@ -18,26 +20,12 @@ const validationSchema = Yup.object().shape({
     .email("Please enter a valid Email.")
     .required("Please enter Email."),
   address: Yup.string().required("Please enter Address."),
-  designation: Yup.string().required("Please select a Designation."),
+  area: Yup.string().required("Please enter area."),
 });
 
 export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
-  const [designations, setDesignations] = useState<Record<string, string>>({});
 
-  useEffect(() => {
-    const fetchDesignations = async () => {
-      try {
-        const res = await api.get("common/get-designations");
-        const data = (res.data as { data: any }).data;
-
-        setDesignations(data);
-      } catch (error) {
-        console.error("Failed to load data", error);
-      }
-    };
-
-    fetchDesignations();
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <Formik
@@ -48,7 +36,7 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
       {({ values, setFieldValue, errors, touched }) => (
         <Form className="max-w-2xl mx-auto bg-white shadow-lg rounded-xl p-6 space-y-6">
           <h2 className="text-xl font-bold text-gray-800">
-            {mode === "create" ? "Add Employee" : "Edit Employee"}
+            {mode === "create" ? "Add Distributor" : "Edit Distributor"}
           </h2>
 
           <div className="grid grid-cols-2 gap-4">
@@ -60,7 +48,7 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
               <Field
                 type="text"
                 name="name"
-                placeholder="Enter Employee Name"
+                placeholder="Enter Distributor Name"
                 className={`w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none 
       ${errors.name && touched.name ? "border-red-500" : "border-gray-300"}`}
               />
@@ -133,33 +121,19 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
                 className="text-red-500 text-sm mt-1"
               />
             </div>
-
-            {/* Designation */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Designation <span className="text-red-500">*</span>
+                Area <span className="text-red-500">*</span>
               </label>
               <Field
-                as="select"
-                name="designation"
+                type="text"
+                name="area"
+                placeholder="Enter Area"
                 className={`w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none 
-      ${
-        errors.designation && touched.designation
-          ? "border-red-500"
-          : "border-gray-300"
-      }`}
-              >
-                <option value="" disabled>
-                  -- Select a Designation --
-                </option>
-                {Object.entries(designations).map(([key, label]) => (
-                  <option key={key} value={key}>
-                    {label}
-                  </option>
-                ))}
-              </Field>
+      ${errors.area && touched.area ? "border-red-500" : "border-gray-300"}`}
+              />
               <ErrorMessage
-                name="designation"
+                name="area"
                 component="div"
                 className="text-red-500 text-sm mt-1"
               />
