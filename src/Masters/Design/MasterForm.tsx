@@ -20,29 +20,33 @@ const validationSchema = Yup.object().shape({
   panel_color_id: Yup.string().required("Please choose a Color."),
   a_section_color_id: Yup.string().required("Please choose a Color."),
   frame_color_id: Yup.string().required("Please choose a Color."),
-  finishing_id: Yup.string().required("Please choose a Finshing."),
+  finishing_ids: Yup.array()
+    .of(Yup.string())
+    .min(1, "Please choose at least one Lamination.")
+    .required("Please choose a Lamination."),
   image: Yup.mixed()
-  .nullable()
-  .test("fileType", "Only image files are allowed", (value: any) => {
-    if (!value || typeof value === "string") return true;
-    return [
-      "image/jpeg",
-      "image/png",
-      "image/jpg",
-      "image/gif",
-      "image/webp",
-    ].includes(value.type);
-  })
-  .test("fileSize", "File size must be less than 3 MB", (value: any) => {
-    if (!value || typeof value === "string") return true;
-    return value.size <= 3 * 1024 * 1024;
-  }),
+    .nullable()
+    .test("fileType", "Only image files are allowed", (value: any) => {
+      if (!value || typeof value === "string") return true;
+      return [
+        "image/jpeg",
+        "image/png",
+        "image/jpg",
+        "image/gif",
+        "image/webp",
+      ].includes(value.type);
+    })
+    .test("fileSize", "File size must be less than 3 MB", (value: any) => {
+      if (!value || typeof value === "string") return true;
+      return value.size <= 3 * 1024 * 1024;
+    }),
 });
 
 export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
   const [designTypes, setDesignTypes] = useState<DesignType[]>([]);
   const [colors, setColors] = useState<Color[]>([]);
   const [finishings, setFinishing] = useState<Finishing[]>([]);
+  const [designTypeShort, setDesignTypeShort] = useState<string>("");
 
   const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -51,7 +55,6 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
       try {
         const res = await api.get("common/get-design-types");
         const data = (res.data as { data: any }).data;
-
         setDesignTypes(data);
       } catch (error) {
         console.error("Failed to load door parts", error);
@@ -80,10 +83,14 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
       }
     };
 
+    if (initialValues?.design_type_short) {
+      setDesignTypeShort(initialValues.design_type_short);
+    }
+
     fetchDesignTypes();
     fetchColors();
     fetchFinishing();
-  }, []);
+  }, [initialValues]);
 
   return (
     <Formik
@@ -106,11 +113,22 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
                 as="select"
                 name="design_type_id"
                 className={`w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none 
-            ${
-              errors.design_type_id && touched.design_type_id
-                ? "border-red-500"
-                : "border-gray-300"
-            }`}
+  ${
+    errors.design_type_id && touched.design_type_id
+      ? "border-red-500"
+      : "border-gray-300"
+  }`}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                  const selectedId = e.target.value;
+                  setFieldValue("design_type_id", selectedId);
+
+                  const selectedType = designTypes.find(
+                    (t) => String(t.id) === selectedId
+                  );
+                  if (selectedType) {
+                    setDesignTypeShort(selectedType.short);
+                  }
+                }}
               >
                 <option value="" disabled>
                   -- Select a Design Type --
@@ -132,17 +150,25 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Design Number <span className="text-red-500">*</span>
               </label>
-              <Field
-                type="text"
-                name="design_number"
-                placeholder="Enter Design Number"
-                className={`w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none 
-                ${
-                  errors.design_number && touched.design_number
-                    ? "border-red-500"
-                    : "border-gray-300"
-                }`}
-              />
+
+              <div className="flex">
+                <span className="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-gray-300 bg-gray-100 text-gray-600 text-sm">
+                  {designTypeShort || "--"}
+                </span>
+
+                <Field
+                  type="text"
+                  name="design_number"
+                  placeholder="Enter Number"
+                  className={`flex-1 border rounded-r-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none
+        ${
+          errors.design_number && touched.design_number
+            ? "border-red-500"
+            : "border-gray-300"
+        }`}
+                />
+              </div>
+
               <ErrorMessage
                 name="design_number"
                 component="div"
@@ -244,27 +270,38 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Lamination <span className="text-red-500">*</span>
               </label>
-              <Field
-                as="select"
-                name="finishing_id"
-                className={`w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none 
-            ${
-              errors.finishing_id && touched.finishing_id
-                ? "border-red-500"
-                : "border-gray-300"
-            }`}
-              >
-                <option value="" disabled>
-                  -- Select a Lamination --
-                </option>
+
+              <div className="space-y-2">
                 {finishings.map((val) => (
-                  <option key={val.id} value={val.id}>
-                    {val.title}
-                  </option>
+                  <label key={val.id} className="flex items-center gap-2">
+                    <Field
+                      type="checkbox"
+                      name="finishing_ids"
+                      value={val.id}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        const value = Number(e.target.value);
+                        if (e.target.checked) {
+                          setFieldValue("finishing_ids", [
+                            ...(values.finishing_ids || []),
+                            value,
+                          ]);
+                        } else {
+                          setFieldValue(
+                            "finishing_ids",
+                            (values.finishing_ids || []).filter(
+                              (id) => id !== value
+                            )
+                          );
+                        }
+                      }}
+                    />
+                    <span className="text-gray-700">{val.title}</span>
+                  </label>
                 ))}
-              </Field>
+              </div>
+
               <ErrorMessage
-                name="finishing_id"
+                name="finishing_ids"
                 component="div"
                 className="text-red-500 text-sm mt-1"
               />

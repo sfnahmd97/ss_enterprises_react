@@ -30,6 +30,10 @@ import ListDesign from "./Masters/Design/List";
 import AddDesign from "./Masters/Design/Add";
 import EditDesign from "./Masters/Design/Edit";
 
+import ListEmployee from "./Masters/Employee/List";
+import AddEmployee from "./Masters/Employee/Add";
+import EditEmployee from "./Masters/Employee/Edit";
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -84,6 +88,11 @@ export default function App() {
                   <Route path="design" element={<ListDesign />} />
                   <Route path="design/add" element={<AddDesign />} />
                   <Route path="design/edit/:id" element={<EditDesign />}/>
+
+                  {/* Designs */}
+                  <Route path="employee" element={<ListEmployee />} />
+                  <Route path="employee/add" element={<AddEmployee />} />
+                  <Route path="employee/edit/:id" element={<EditEmployee />}/>
                   
                 </Routes>
               </Layout>

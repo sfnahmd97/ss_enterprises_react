@@ -3,12 +3,12 @@ import { useNavigate,Link } from "react-router-dom";
 import api from "../../lib/axios";
 import toast from "react-hot-toast";
 import type { FormikHelpers } from "formik";
-import type { Design } from "../../interfaces/common";
+import type { Employee } from "../../interfaces/common";
 
 export default function addDoorPartSize() {
   const navigate = useNavigate();
 
-  const handleSubmit = async (values: Design,{ setErrors }: FormikHelpers<Design>) => {
+  const handleSubmit = async (values: Employee,{ setErrors }: FormikHelpers<Employee>) => {
     try {
 
       const formData = new FormData();
@@ -79,10 +79,10 @@ export default function addDoorPartSize() {
                   />
                 </svg>
                 <Link
-              to="/master/design"
+              to="/master/employee"
               className="text-gray-500 hover:text-green-600 transition"
             >
-                Design
+                Employee
                 </Link>
               </div>
             </li>
@@ -107,7 +107,7 @@ export default function addDoorPartSize() {
           </ol>
         </nav>
     <MasterForm
-      initialValues={{ design_number: "",design_type_id:"",design_type_short:"",panel_color_id: "",a_section_color_id:"",frame_color_id:"",finishing_ids:[],image:null, status: true }}
+      initialValues={{ name: "",phone_no:"",email: "",address:"",designation:"",status: true }}
       onSubmit={handleSubmit}
       mode="create"
     />

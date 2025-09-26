@@ -24,9 +24,11 @@ export default function editFinishing() {
         setInitialValues({
           ...data,
           status: data.status === 1,
+          design_type_short: data.design_type_short || "",
+          finishing_ids: data.finishing_ids || [],
         });
       } catch (err) {
-        toast.error("Failed to load design type data");
+        toast.error("Failed to load design data");
       }finally {
       setLoading(false); 
     }

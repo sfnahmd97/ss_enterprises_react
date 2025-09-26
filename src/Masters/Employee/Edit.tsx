@@ -1,44 +1,48 @@
+import { useEffect, useState } from "react";
+import { useNavigate, useParams,Link } from "react-router-dom";
 import MasterForm from "./MasterForm";
-import { useNavigate,Link } from "react-router-dom";
 import api from "../../lib/axios";
 import toast from "react-hot-toast";
 import type { FormikHelpers } from "formik";
-import type { Design } from "../../interfaces/common";
+import type { Finishing } from "../../interfaces/common";
 
-export default function addDoorPartSize() {
+
+export default function editFinishing() {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const [initialValues, setInitialValues] = useState<Finishing | null>(null);
 
-  const handleSubmit = async (values: Design,{ setErrors }: FormikHelpers<Design>) => {
-    try {
 
-      const formData = new FormData();
+  useEffect(() => {
+    const fetchFinishing = async () => {
+      try {
+        const res = await api.get(`/finishing/${id}/edit`);
+        const data = (res.data as { data: any }).data;
 
-    Object.keys(values).forEach((key) => {
-      const value = (values as any)[key];
-
-      if (key === "image" && value instanceof File) {
-        formData.append("image", value); 
-      } else if (key === "status") {
-    formData.append("status", value ? "1" : "0"); 
-  } else if (value !== null && value !== undefined) {
-        formData.append(key, value);
+        setInitialValues({
+          ...data,
+          status: data.status === 1,
+        });
+      } catch (err) {
+        toast.error("Failed to load design type data");
       }
-    });
+    };
+    if (id) fetchFinishing();
+  }, [id]);
 
-      const res = await api.post("/design", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+  const handleSubmit = async (values: Finishing,{ setErrors }: FormikHelpers<Finishing>) => {
+    try {
+      const res =await api.put(`/finishing/${id}`, values);
       const success = (res.data as { success: any[] }).success;
       const message = (res.data as { message: string }).message;
-
       if (success) {
         toast.success(message);
-        navigate("/master/design");
+        navigate("/master/finishing");
       } else {
         toast.error(message || "Something went wrong");
       }
     } catch (error: any) {
-     if (error.response?.data?.errors) {
+      if (error.response?.data?.errors) {
       const validationErrors = error.response.data.errors;
       const formattedErrors: Record<string, string> = {};
 
@@ -52,6 +56,8 @@ export default function addDoorPartSize() {
     }
     }
   };
+
+  if (!initialValues) return <p>Loading...</p>;
 
   return (
     <div className="p-6">
@@ -79,10 +85,10 @@ export default function addDoorPartSize() {
                   />
                 </svg>
                 <Link
-              to="/master/design"
+              to="/master/finishing"
               className="text-gray-500 hover:text-green-600 transition"
             >
-                Design
+                Lamination 
                 </Link>
               </div>
             </li>
@@ -101,15 +107,15 @@ export default function addDoorPartSize() {
                     d="M9 5l7 7-7 7"
                   />
                 </svg>
-                <span className="text-gray-700 font-medium">Add</span>
+                <span className="text-gray-700 font-medium">Edit</span>
               </div>
             </li>
           </ol>
         </nav>
     <MasterForm
-      initialValues={{ design_number: "",design_type_id:"",design_type_short:"",panel_color_id: "",a_section_color_id:"",frame_color_id:"",finishing_ids:[],image:null, status: true }}
+      initialValues={initialValues}
       onSubmit={handleSubmit}
-      mode="create"
+      mode="edit"
     />
     </div>
   );

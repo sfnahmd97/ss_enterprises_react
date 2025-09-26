@@ -11,6 +11,7 @@ import {
   Palette,
   Ruler,
   DoorOpen,
+  UsersRound,
 } from "lucide-react";
 
 interface MenuItem {
@@ -38,6 +39,7 @@ const sections: Section[] = [
       { name: "Lamination", path: "/master/finishing", icon: <PaintRoller size={18} /> },
       { name: "Door Part Size", path: "/master/door-part-size", icon: <Ruler size={18} /> },
       { name: "Design", path: "/master/design", icon: <DoorOpen size={18} /> },
+      { name: "Employee", path: "/master/employee", icon: <UsersRound size={18} /> },
     ],
   },
 ];
