@@ -28,13 +28,27 @@ export default function Main() {
   const [showModal, setShowModal] = useState(false);
   const [selectedDesign, setSelectedDesign] = useState<any | null>(null);
   const [modalLoading, setModalLoading] = useState(false);
+  const [designTypes, setDesignTypes] = useState<any[]>([]);
+const [selectedDesignType, setSelectedDesignType] = useState("");
 
-  const fetchDesign = async (page = 1, search = "") => {
+
+  const fetchDesignTypes = async () => {
+  try {
+    const res = await api.get("/common/get-design-types"); // 🔹 adjust API path
+    const data = (res.data as { data: any[] }).data;
+    setDesignTypes(data);
+  } catch (error) {
+    console.error("Failed to fetch design types:", error);
+  }
+};
+
+  const fetchDesign = async (page = 1, search = "", designType = "") => {
     try {
       setLoading(true);
 
       const params: any = { page, per_page: perPage };
       if (search) params.search_key = search;
+      if (designType) params.design_type_id = designType;
       const res = await api.get<ListApiResponse<any[]>>(`/design`, { params });
 
       const response = res.data;
@@ -96,8 +110,13 @@ export default function Main() {
   };
 
   useEffect(() => {
-    fetchDesign(currentPage);
-  }, [currentPage]);
+    fetchDesign(currentPage, searchTerm, selectedDesignType);
+
+  fetchDesignTypes();
+
+  }, [currentPage, searchTerm, selectedDesignType]);
+
+
 
   return (
     <div className="p-4">
@@ -140,18 +159,42 @@ export default function Main() {
 
       <div className="bg-white shadow rounded-xl border border-gray-200">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center p-4 border-b border-gray-200 gap-3">
-          <h6 className="text-lg font-semibold text-gray-800">Design List</h6>
-          <input
-            type="text"
-            placeholder="Search..."
-            className="px-3 py-1.5 w-60 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              fetchDesign(1, e.target.value);
-            }}
-          />
-        </div>
+  <h6 className="text-lg font-semibold text-gray-800">Design List</h6>
+
+  <div className="flex gap-3">
+    {/* Filter: Design Type */}
+    <select
+  value={selectedDesignType}
+  onChange={(e) => {
+    setSelectedDesignType(e.target.value);
+    setCurrentPage(1);
+  }}
+  className="w-60 px-4 py-2 text-sm bg-white border border-gray-300 rounded-xl shadow-sm 
+             focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 
+             hover:border-gray-400 transition"
+>
+  <option value="">All Types</option>
+  {designTypes.map((dt) => (
+    <option key={dt.id} value={dt.id} className="py-2">
+      {dt.title}
+    </option>
+  ))}
+</select>
+
+
+    {/* Search box */}
+    <input
+      type="text"
+      placeholder="Search..."
+      className="px-3 py-1.5 w-60 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+      value={searchTerm}
+      onChange={(e) => {
+        setSearchTerm(e.target.value);
+        setCurrentPage(1);
+      }}
+    />
+  </div>
+</div>
 
         {/* Table */}
         <div className="p-4 overflow-x-auto">
@@ -262,7 +305,10 @@ export default function Main() {
           perPage={perPage}
           total={total}
           lastPage={lastPage}
-          onPageChange={(page) => setCurrentPage(page)}
+          onPageChange={(page) => {
+    setCurrentPage(page);
+    fetchDesign(page, searchTerm, selectedDesignType);
+  }}
         />
       </div>
 
