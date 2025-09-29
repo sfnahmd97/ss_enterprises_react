@@ -32,17 +32,7 @@ const Home: React.FC = () => {
       <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-3">
         <h2 className="text-xl font-semibold">Welcome to Dashboard</h2>
         <div className="flex flex-wrap gap-3">
-          <input
-            type="date"
-            className="border px-3 py-2 rounded-lg text-sm"
-            defaultValue="2025-09-07"
-          />
-          <button className="px-4 py-2 border rounded-lg text-blue-600 border-blue-600 hover:bg-blue-50">
-            Print
-          </button>
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-            Download Report
-          </button>
+          
         </div>
       </div>
 
