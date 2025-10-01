@@ -7,7 +7,7 @@ import type { FormikHelpers } from "formik";
 import type { Design } from "../../interfaces/common";
 import PageLoader from "../../components/common/pageLoader";
 
-export default function editFinishing() {
+export default function editDesign() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [initialValues, setInitialValues] = useState<Design | null>(null);

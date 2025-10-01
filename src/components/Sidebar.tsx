@@ -13,6 +13,8 @@ import {
   DoorOpen,
   UsersRound,
   Bus,
+  Map,
+  CircleSmall,
 } from "lucide-react";
 
 interface MenuItem {
@@ -42,6 +44,14 @@ const sections: Section[] = [
       { name: "Design", path: "/master/design", icon: <DoorOpen size={18} /> },
       { name: "Employee", path: "/master/employee", icon: <UsersRound size={18} /> },
       { name: "Distributor", path: "/master/distributor", icon: <Bus size={18} /> },
+      {
+    name: "Location",
+    icon: <Map size={20} />,
+    subMenu: [
+      { name: "Manage", path: "/master/location", icon: <CircleSmall size={12} /> },
+      { name: "Assign", path: "/dashboard/master/products", icon: <CircleSmall size={12} /> },
+    ],
+  },
     ],
   },
 ];

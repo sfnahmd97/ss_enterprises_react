@@ -2,10 +2,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useEffect, useState } from "react";
 import type { FormikHelpers } from "formik";
 import * as Yup from "yup";
-import type { Design } from "../../interfaces/common";
-import type { DesignType } from "../../interfaces/common";
-import type { Color } from "../../interfaces/common";
-import type { Finishing } from "../../interfaces/common";
+import type { Design,DesignType,Color,Finishing } from "../../interfaces/common";
 import api from "../../lib/axios";
 
 interface Props {

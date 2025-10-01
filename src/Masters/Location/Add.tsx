@@ -3,39 +3,25 @@ import { useNavigate,Link } from "react-router-dom";
 import api from "../../lib/axios";
 import toast from "react-hot-toast";
 import type { FormikHelpers } from "formik";
-import type { Design } from "../../interfaces/common";
+import type { Location } from "../../interfaces/common";
 
-export default function addDesign() {
+
+
+export default function addLocation() {
   const navigate = useNavigate();
 
-  const handleSubmit = async (values: Design,{ setErrors }: FormikHelpers<Design>) => {
+  const handleSubmit = async (values: Location,{ setErrors }: FormikHelpers<Location>) => {
     try {
-
-      const formData = new FormData();
-
-    Object.keys(values).forEach((key) => {
-      const value = (values as any)[key];
-
-      if (key === "image" && value instanceof File) {
-        formData.append("image", value); 
-      } else if (key === "status") {
-    formData.append("status", value ? "1" : "0"); 
-  } else if (value !== null && value !== undefined) {
-        formData.append(key, value);
-      }
-    });
-
-      const res = await api.post("/design", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+      const res = await api.post("/location", values);
       const success = (res.data as { success: any[] }).success;
       const message = (res.data as { message: string }).message;
 
       if (success) {
         toast.success(message);
-        navigate("/master/design");
+        navigate("/master/location");
       } else {
         toast.error(message || "Something went wrong");
+
       }
     } catch (error: any) {
      if (error.response?.data?.errors) {
@@ -48,7 +34,8 @@ export default function addDesign() {
 
       setErrors(formattedErrors); 
     } else {
-      toast.error(error.response?.data?.message || "Server error");
+      console.log("message :"+error.response?.data?.message)
+      toast.error("Server error");
     }
     }
   };
@@ -79,10 +66,10 @@ export default function addDesign() {
                   />
                 </svg>
                 <Link
-              to="/master/design"
+              to="/master/location"
               className="text-gray-500 hover:text-green-600 transition"
             >
-                Design
+                Location
                 </Link>
               </div>
             </li>
@@ -107,7 +94,7 @@ export default function addDesign() {
           </ol>
         </nav>
     <MasterForm
-      initialValues={{ design_number: "",design_type_id:"",design_type_short:"",panel_color_id: "",a_section_color_id:"",frame_color_id:"",finishing_ids:[],image:null, status: true }}
+      initialValues={{ location_name: "",state_key:"",district_key:"", status: true }}
       onSubmit={handleSubmit}
       mode="create"
     />

@@ -88,3 +88,23 @@ export interface Distributor {
   area: string;
   status?: boolean;
 }
+
+ export interface Location {
+  id?: number;
+  location_name: string;
+  location_key?: string;
+  state_key: string;
+  district_key: string;
+  state?: string;
+  district?: string;
+  status?: boolean;
+}
+ export interface States {
+  key: string;
+  name: string;
+}
+ export interface Districts {
+  key: string;
+  name: string;
+  state: string;
+}

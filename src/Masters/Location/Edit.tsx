@@ -1,44 +1,49 @@
+import { useEffect, useState } from "react";
+import { useNavigate, useParams,Link } from "react-router-dom";
 import MasterForm from "./MasterForm";
-import { useNavigate,Link } from "react-router-dom";
 import api from "../../lib/axios";
 import toast from "react-hot-toast";
 import type { FormikHelpers } from "formik";
-import type { Design } from "../../interfaces/common";
+import type { Location } from "../../interfaces/common";
 
-export default function addDesign() {
+
+export default function editLocation() {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const [initialValues, setInitialValues] = useState<Location | null>(null);
 
-  const handleSubmit = async (values: Design,{ setErrors }: FormikHelpers<Design>) => {
-    try {
 
-      const formData = new FormData();
+  useEffect(() => {
+    const fetchLocation = async () => {
+      try {
+        const res = await api.get(`/location/${id}/edit`);
+        const data = (res.data as { data: any }).data;
+        console.log(data)
 
-    Object.keys(values).forEach((key) => {
-      const value = (values as any)[key];
-
-      if (key === "image" && value instanceof File) {
-        formData.append("image", value); 
-      } else if (key === "status") {
-    formData.append("status", value ? "1" : "0"); 
-  } else if (value !== null && value !== undefined) {
-        formData.append(key, value);
+        setInitialValues({
+          ...data,
+          status: data.status === 1,
+        });
+      } catch (err) {
+        toast.error("Failed to load Location data");
       }
-    });
+    };
+    if (id) fetchLocation();
+  }, [id]);
 
-      const res = await api.post("/design", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+  const handleSubmit = async (values: Location,{ setErrors }: FormikHelpers<Location>) => {
+    try {
+      const res =await api.put(`/location/${id}`, values);
       const success = (res.data as { success: any[] }).success;
       const message = (res.data as { message: string }).message;
-
       if (success) {
         toast.success(message);
-        navigate("/master/design");
+        navigate("/master/location");
       } else {
         toast.error(message || "Something went wrong");
       }
     } catch (error: any) {
-     if (error.response?.data?.errors) {
+      if (error.response?.data?.errors) {
       const validationErrors = error.response.data.errors;
       const formattedErrors: Record<string, string> = {};
 
@@ -52,6 +57,8 @@ export default function addDesign() {
     }
     }
   };
+
+  if (!initialValues) return <p>Loading...</p>;
 
   return (
     <div className="p-6">
@@ -79,10 +86,10 @@ export default function addDesign() {
                   />
                 </svg>
                 <Link
-              to="/master/design"
+              to="/master/location"
               className="text-gray-500 hover:text-green-600 transition"
             >
-                Design
+                Location 
                 </Link>
               </div>
             </li>
@@ -101,15 +108,15 @@ export default function addDesign() {
                     d="M9 5l7 7-7 7"
                   />
                 </svg>
-                <span className="text-gray-700 font-medium">Add</span>
+                <span className="text-gray-700 font-medium">Edit</span>
               </div>
             </li>
           </ol>
         </nav>
     <MasterForm
-      initialValues={{ design_number: "",design_type_id:"",design_type_short:"",panel_color_id: "",a_section_color_id:"",frame_color_id:"",finishing_ids:[],image:null, status: true }}
+      initialValues={initialValues}
       onSubmit={handleSubmit}
-      mode="create"
+      mode="edit"
     />
     </div>
   );

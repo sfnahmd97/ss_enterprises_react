@@ -227,7 +227,7 @@ export default function Main() {
                       {(currentPage - 1) * perPage + (index + 1)}
                     </td>
                     <td className="px-4 py-3">
-                      {val.design_type_short}-{val.design_number}
+                      {val.design_code}
                     </td>
                     <td className="px-4 py-3">{val.design_type.title}</td>
                     <td className="px-4 py-3 text-center">
@@ -343,8 +343,7 @@ export default function Main() {
                         Design Number
                       </p>
                       <p className="text-gray-900">
-                        {selectedDesign.design_type_short}-
-                        {selectedDesign.design_number}
+                        {selectedDesign.design_code}
                       </p>
                     </div>
 

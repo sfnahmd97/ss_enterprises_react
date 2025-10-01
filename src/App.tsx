@@ -38,6 +38,10 @@ import ListDistributor from "./Masters/Distributor/List";
 import AddDistributor from "./Masters/Distributor/Add";
 import EditDistributor from "./Masters/Distributor/Edit";
 
+import ListLocation from "./Masters/Location/List";
+import AddLocation from "./Masters/Location/Add";
+import EditLocation from "./Masters/Location/Edit";
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -45,7 +49,6 @@ export default function App() {
         {/* Public Route */}
         <Route path="/login" element={<LoginPage />} />
 
-        {/* Dashboard Group */}
         <Route
           path="/dashboard/*"
           element={
@@ -102,6 +105,11 @@ export default function App() {
                   <Route path="distributor" element={<ListDistributor />} />
                   <Route path="distributor/add" element={<AddDistributor />} />
                   <Route path="distributor/edit/:id" element={<EditDistributor />}/>
+
+                  {/* Location */}
+                  <Route path="location" element={<ListLocation />} />
+                  <Route path="location/add" element={<AddLocation />} />
+                  <Route path="location/edit/:id" element={<EditLocation />}/>
                   
                 </Routes>
               </Layout>

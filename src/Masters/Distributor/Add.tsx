@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import type { FormikHelpers } from "formik";
 import type { Distributor } from "../../interfaces/common";
 
-export default function addDoorPartSize() {
+export default function addDistributor() {
   const navigate = useNavigate();
 
   const handleSubmit = async (

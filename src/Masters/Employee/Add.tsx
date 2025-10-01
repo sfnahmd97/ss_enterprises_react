@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import type { FormikHelpers } from "formik";
 import type { Employee } from "../../interfaces/common";
 
-export default function addDoorPartSize() {
+export default function addEmployee() {
   const navigate = useNavigate();
 
   const handleSubmit = async (
