@@ -2,8 +2,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useEffect, useState } from "react";
 import type { FormikHelpers } from "formik";
 import * as Yup from "yup";
-import type { DoorPartSize } from "../../interfaces/common";
-import type { DoorPart } from "../../interfaces/common";
+import type { DoorPartSize,DoorPart } from "../../interfaces/common";
 import api from "../../lib/axios";
 
 

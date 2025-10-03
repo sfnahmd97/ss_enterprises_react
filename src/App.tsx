@@ -42,6 +42,10 @@ import ListLocation from "./Masters/Location/List";
 import AddLocation from "./Masters/Location/Add";
 import EditLocation from "./Masters/Location/Edit";
 
+import ListLocationAssign from "./Masters/LocationAssign/List";
+import AddLocationAssign from "./Masters/LocationAssign/Add";
+import EditLocationAssign from "./Masters/LocationAssign/Edit";
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -110,6 +114,11 @@ export default function App() {
                   <Route path="location" element={<ListLocation />} />
                   <Route path="location/add" element={<AddLocation />} />
                   <Route path="location/edit/:id" element={<EditLocation />}/>
+
+                  {/* Location Assign */}
+                  <Route path="location-assign" element={<ListLocationAssign />} />
+                  <Route path="location-assign/add" element={<AddLocationAssign />} />
+                  <Route path="location-assign/edit/:id" element={<EditLocationAssign />}/>
                   
                 </Routes>
               </Layout>

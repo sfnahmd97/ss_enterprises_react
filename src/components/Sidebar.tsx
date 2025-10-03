@@ -49,7 +49,7 @@ const sections: Section[] = [
     icon: <Map size={20} />,
     subMenu: [
       { name: "Manage", path: "/master/location", icon: <CircleSmall size={12} /> },
-      { name: "Assign", path: "/dashboard/master/products", icon: <CircleSmall size={12} /> },
+      { name: "Assign", path: "/master/location-assign", icon: <CircleSmall size={12} /> },
     ],
   },
     ],

@@ -106,5 +106,14 @@ export interface Distributor {
  export interface Districts {
   key: string;
   name: string;
-  state: string;
+  state?: string;
+}
+
+export interface LocationAssign {
+  id?: number;
+  employee_id: number | "";
+  location_id: number | "";
+  state_key?: string;
+  district_key?: string;
+  status?: boolean;
 }
