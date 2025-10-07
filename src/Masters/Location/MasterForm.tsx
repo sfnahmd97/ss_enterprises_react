@@ -16,8 +16,8 @@ interface Props {
 
 const validationSchema = Yup.object().shape({
   location_name: Yup.string().required("Please enter Name"),
-  state_key: Yup.string().required("Please choose a State"),
-  district_key: Yup.string().required("Please choose a District"),
+  state_id: Yup.string().required("Please choose a State"),
+  district_id: Yup.string().required("Please choose a District"),
 });
 
 export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
@@ -37,9 +37,9 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
     fetchStates();
   }, []);
 
-  const fetchDistricts = async (stateKey: string) => {
+  const fetchDistricts = async (stateId: number) => {
     try {
-      const res = await api.get(`common/get-districts/${stateKey}`);
+      const res = await api.get(`common/get-districts/${stateId}`);
       const data = (res.data as { data: Districts[] }).data;
       setDistricts(data);
     } catch (error) {
@@ -55,13 +55,13 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
     >
       {({ values, setFieldValue, errors, touched }) => {
         useEffect(() => {
-          if (values.state_key) {
-            fetchDistricts(values.state_key);
+          if (values.state_id) {
+            fetchDistricts(Number(values.state_id));
             if (mode === "create") {
-        setFieldValue("district_key", "");
+        setFieldValue("district_id", "");
       }
           }
-        }, [values.state_key]);
+        }, [values.state_id]);
 
         return (
           <Form className="max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 space-y-5">
@@ -99,10 +99,10 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
               </label>
               <Field
                 as="select"
-                name="state_key"
+                name="state_id"
                 className={`w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none 
                   ${
-                    errors.state_key && touched.state_key
+                    errors.state_id && touched.state_id
                       ? "border-red-500"
                       : "border-gray-300"
                   }`}
@@ -111,30 +111,30 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
                   Select a State
                 </option>
                 {states.map((state) => (
-                  <option key={state.key} value={state.key}>
+                  <option key={state.id} value={state.id}>
                     {state.name}
                   </option>
                 ))}
               </Field>
               <ErrorMessage
-                name="state_key"
+                name="state_id"
                 component="div"
                 className="text-red-500 text-sm mt-1"
               />
             </div>
 
             {/* District */}
-            {values.state_key && (
+            {values.state_id && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 District <span className="text-red-500">*</span>
               </label>
               <Field
                 as="select"
-                name="district_key"
+                name="district_id"
                 className={`w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none 
                   ${
-                    errors.district_key && touched.district_key
+                    errors.district_id && touched.district_id
                       ? "border-red-500"
                       : "border-gray-300"
                   }`}
@@ -143,13 +143,13 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
                   Select a District
                 </option>
                 {districts.map((district) => (
-                  <option key={district.key} value={district.key}>
+                  <option key={district.id} value={district.id}>
                     {district.name}
                   </option>
                 ))}
               </Field>
               <ErrorMessage
-                name="district_key"
+                name="district_id"
                 component="div"
                 className="text-red-500 text-sm mt-1"
               />

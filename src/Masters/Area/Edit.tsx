@@ -1,28 +1,58 @@
+import { useEffect, useState } from "react";
+import { useNavigate, useParams,Link } from "react-router-dom";
 import MasterForm from "./MasterForm";
-import { useNavigate,Link } from "react-router-dom";
 import api from "../../lib/axios";
 import toast from "react-hot-toast";
 import type { FormikHelpers } from "formik";
-import type { Location } from "../../interfaces/common";
+import type { Area } from "../../interfaces/common";
+import PageLoader from "../../components/common/pageLoader";
 
-export default function addLocation() {
+
+
+export default function editLocation() {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const [initialValues, setInitialValues] = useState<Area | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const handleSubmit = async (values: Location,{ setErrors }: FormikHelpers<Location>) => {
+
+  useEffect(() => {
+    const fetchLocation = async () => {
+      try {
+        setLoading(true);
+      const res = await api.get(`/area/${id}/edit`);
+      const data = (res.data as { data: any }).data;
+
+      setInitialValues({
+  id: data.id,
+  area_name: data.area_name || "",
+  state_id: Number(data.state_id[0] || 0), // number
+  district_ids: data.district_ids || [],   // number[]
+  location_ids: data.location_ids || [],   // number[]
+  status: data.status === 1,
+});
+    } catch (err) {
+      toast.error("Failed to load Area data");
+    }finally {
+      setLoading(false); 
+    }
+  };
+    if (id) fetchLocation();
+  }, [id]);
+
+  const handleSubmit = async (values: Area,{ setErrors }: FormikHelpers<Area>) => {
     try {
-      const res = await api.post("/location", values);
+      const res =await api.put(`/area/${id}`, values);
       const success = (res.data as { success: any[] }).success;
       const message = (res.data as { message: string }).message;
-
       if (success) {
         toast.success(message);
-        navigate("/master/location");
+        navigate("/master/area");
       } else {
         toast.error(message || "Something went wrong");
-
       }
     } catch (error: any) {
-     if (error.response?.data?.errors) {
+      if (error.response?.data?.errors) {
       const validationErrors = error.response.data.errors;
       const formattedErrors: Record<string, string> = {};
 
@@ -32,11 +62,13 @@ export default function addLocation() {
 
       setErrors(formattedErrors); 
     } else {
-      console.log("message :"+error.response?.data?.message)
-      toast.error("Server error");
+      toast.error(error.response?.data?.message || "Server error");
     }
     }
   };
+
+  if (loading) return <PageLoader />;
+  if (!initialValues) return <p>Loading...</p>;
 
   return (
     <div className="p-6">
@@ -64,10 +96,10 @@ export default function addLocation() {
                   />
                 </svg>
                 <Link
-              to="/master/location"
+              to="/master/area"
               className="text-gray-500 hover:text-green-600 transition"
             >
-                Location
+                Area 
                 </Link>
               </div>
             </li>
@@ -86,15 +118,15 @@ export default function addLocation() {
                     d="M9 5l7 7-7 7"
                   />
                 </svg>
-                <span className="text-gray-700 font-medium">Add</span>
+                <span className="text-gray-700 font-medium">Edit</span>
               </div>
             </li>
           </ol>
         </nav>
     <MasterForm
-      initialValues={{ location_name: "",state_id:"",district_id:"", status: true }}
+      initialValues={initialValues}
       onSubmit={handleSubmit}
-      mode="create"
+      mode="edit"
     />
     </div>
   );

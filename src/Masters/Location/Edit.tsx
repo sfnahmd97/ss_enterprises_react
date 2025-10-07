@@ -18,7 +18,6 @@ export default function editLocation() {
       try {
         const res = await api.get(`/location/${id}/edit`);
         const data = (res.data as { data: any }).data;
-        console.log(data)
 
         setInitialValues({
           ...data,

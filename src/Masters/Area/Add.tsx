@@ -3,20 +3,20 @@ import { useNavigate,Link } from "react-router-dom";
 import api from "../../lib/axios";
 import toast from "react-hot-toast";
 import type { FormikHelpers } from "formik";
-import type { Location } from "../../interfaces/common";
+import type { Area } from "../../interfaces/common";
 
 export default function addLocation() {
   const navigate = useNavigate();
 
-  const handleSubmit = async (values: Location,{ setErrors }: FormikHelpers<Location>) => {
+  const handleSubmit = async (values: Area,{ setErrors }: FormikHelpers<Area>) => {
     try {
-      const res = await api.post("/location", values);
+      const res = await api.post("/area", values);
       const success = (res.data as { success: any[] }).success;
       const message = (res.data as { message: string }).message;
 
       if (success) {
         toast.success(message);
-        navigate("/master/location");
+        navigate("/master/area");
       } else {
         toast.error(message || "Something went wrong");
 
@@ -64,10 +64,10 @@ export default function addLocation() {
                   />
                 </svg>
                 <Link
-              to="/master/location"
+              to="/master/area"
               className="text-gray-500 hover:text-green-600 transition"
             >
-                Location
+                Area
                 </Link>
               </div>
             </li>
@@ -92,7 +92,7 @@ export default function addLocation() {
           </ol>
         </nav>
     <MasterForm
-      initialValues={{ location_name: "",state_id:"",district_id:"", status: true }}
+      initialValues={{ area_name: "",state_id:"",district_ids:[],location_ids:[], status: true }}
       onSubmit={handleSubmit}
       mode="create"
     />

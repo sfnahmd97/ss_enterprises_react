@@ -153,7 +153,7 @@ export default function Main() {
               {loading ? (
                 <tr>
                   <td
-                    colSpan={6}
+                    colSpan={7}
                     className="px-4 py-6 text-center text-gray-500 italic"
                   >
                     Loading ...
@@ -169,8 +169,8 @@ export default function Main() {
                       {(currentPage - 1) * perPage + (index + 1)}
                     </td>
                     <td className="px-4 py-3">{val.location_name}</td>
-                    <td className="px-4 py-3">{val.state}</td>
-                    <td className="px-4 py-3">{val.district}</td>
+                    <td className="px-4 py-3">{val.district.name}</td>
+                    <td className="px-4 py-3">{val.state.name}</td>
                     <td className="px-4 py-3 text-center">
                       {val.status ? (
                         <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full">
@@ -224,7 +224,7 @@ export default function Main() {
               ) : (
                 <tr>
                   <td
-                    colSpan={6}
+                    colSpan={7}
                     className="px-4 py-6 text-center text-gray-500 italic"
                   >
                    Data not found.

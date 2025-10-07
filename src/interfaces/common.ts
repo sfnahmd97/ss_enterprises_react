@@ -93,27 +93,29 @@ export interface Distributor {
   id?: number;
   location_name: string;
   location_key?: string;
-  state_key: string;
-  district_key: string;
+  state_id: string;
+  district_id: string;
   state?: string;
   district?: string;
   status?: boolean;
 }
  export interface States {
+  id?: number;
   key: string;
   name: string;
 }
  export interface Districts {
+  id?: number;
   key: string;
   name: string;
   state?: string;
 }
 
-export interface LocationAssign {
+export interface Area {
   id?: number;
-  employee_id: number | "";
-  location_id: number | "";
-  state_key?: string;
-  district_key?: string;
-  status?: boolean;
+  area_name: string;
+  state_id: number | "";
+  district_ids: number[];
+  location_ids: number[];
+  status: boolean;
 }
