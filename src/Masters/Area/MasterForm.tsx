@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Select from "react-select";
 import type { MultiValue, ActionMeta } from "react-select";
 import * as Yup from "yup";
+import Swal from "sweetalert2";
 import api from "../../lib/axios";
 import type { FormikHelpers } from "formik";
 import type {
@@ -36,7 +37,7 @@ export default function AreaMasterForm({ initialValues, onSubmit, mode }: Props)
 
   useEffect(() => {
     const fetchStates = async () => {
-      const res = await api.get("common/get-states");
+      const res = await api.get("common/get-states-from-location");
       setStates((res.data as { data: States[] }).data);
     };
     fetchStates();
@@ -44,7 +45,7 @@ export default function AreaMasterForm({ initialValues, onSubmit, mode }: Props)
     if (mode === "edit" && initialValues?.state_id) {
       const loadDistrictsAndLocations = async () => {
         try {
-          const districtRes = await api.get(`common/get-districts/${initialValues.state_id}`);
+          const districtRes = await api.get(`common/get-districts-from-location/${initialValues.state_id}`);
           setDistricts((districtRes.data as { data: Districts[] }).data);
 
           if (initialValues.district_ids?.length > 0) {
@@ -62,14 +63,11 @@ export default function AreaMasterForm({ initialValues, onSubmit, mode }: Props)
   }, [mode, initialValues]);
 
   const handleDistrictFetch = async (state_id: number) => {
-    const res = await api.get(`common/get-districts/${state_id}`);
+    const res = await api.get(`common/get-districts-from-location/${state_id}`);
     setDistricts((res.data as { data: Districts[] }).data);
   };
 
-  const handleLocationFetch = async (districtIDs: number[]) => {
-    const res = await api.post(`common/get-locations-by-districts`, { district_ids: districtIDs });
-    setLocations((res.data as { data: Location[] }).data);
-  };
+  
 
   return (
     <Formik initialValues={initialValues} validationSchema={validationSchema} enableReinitialize onSubmit={onSubmit}>
@@ -116,14 +114,76 @@ export default function AreaMasterForm({ initialValues, onSubmit, mode }: Props)
   value={districts
     .filter(d => d.id !== undefined && values.district_ids?.includes(d.id!))
     .map(d => ({ value: d.id!, label: d.name }))}
-  onChange={(
-    selected: MultiValue<{ value: number; label: string }>,
-    _actionMeta: ActionMeta<{ value: number; label: string }>
-  ) => {
-    const ids = selected.map(s => s.value); // readonly → mapped to mutable array
-    setFieldValue("district_ids", ids);
-    handleLocationFetch(ids);
-  }}
+  onChange={async (
+  selected: MultiValue<{ value: number; label: string }>,
+  _actionMeta: ActionMeta<{ value: number; label: string }>
+) => {
+  const selectedDistrictIds = selected.map(s => s.value);
+  const previousDistrictIds = values.district_ids || [];
+
+  setFieldValue("district_ids", selectedDistrictIds);
+
+  // Case 1️⃣: When a district is removed → remove its locations
+  if (selectedDistrictIds.length < previousDistrictIds.length) {
+    // Fetch all remaining districts' locations
+    if (selectedDistrictIds.length > 0) {
+      const res = await api.post(`common/get-locations-by-districts`, {
+        district_ids: selectedDistrictIds,
+      });
+      const updatedLocations = (res.data as { data: Location[] }).data;
+
+      // Update location list
+      setLocations(updatedLocations);
+
+      // Filter out location_ids not in updated list
+      const filteredLocationIds =
+        values.location_ids?.filter(id =>
+          updatedLocations.some(l => l.id === id)
+        ) || [];
+      setFieldValue("location_ids", filteredLocationIds);
+    } else {
+      // No districts selected → clear locations
+      setLocations([]);
+      setFieldValue("location_ids", []);
+    }
+
+    return; // stop here, no need to show SweetAlert
+  }
+
+  // Case 2️⃣: When new district(s) are added → ask with SweetAlert
+  if (selectedDistrictIds.length > previousDistrictIds.length) {
+    const result = await Swal.fire({
+      title: "Add all locations?",
+      text: "Do you want to add all locations under the selected districts?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+    });
+
+    const res = await api.post(`common/get-locations-by-districts`, {
+      district_ids: selectedDistrictIds,
+    });
+    const newLocations = (res.data as { data: Location[] }).data;
+
+    setLocations(newLocations);
+
+    if (result.isConfirmed) {
+      // select all locations
+      setFieldValue("location_ids", newLocations.map(l => l.id!));
+    } else {
+      // retain only previously selected locations that are still valid
+      const prevSelected =
+        values.location_ids?.filter(id =>
+          newLocations.some(l => l.id === id)
+        ) || [];
+      setFieldValue("location_ids", prevSelected);
+    }
+  }
+}}
+
+
+
 />
   <ErrorMessage name="district_ids" component="div" className="text-red-500 text-sm mt-1" />
 </div>

@@ -26,11 +26,13 @@ export default function editLocation() {
       setInitialValues({
   id: data.id,
   area_name: data.area_name || "",
-  state_id: Number(data.state_id[0] || 0), // number
-  district_ids: data.district_ids || [],   // number[]
-  location_ids: data.location_ids || [],   // number[]
+  state_id: Number(data.state_id[0] || 0), 
+  district_ids: data.district_ids || [],   
+  location_ids: data.location_ids || [],   
   status: data.status === 1,
 });
+
+
     } catch (err) {
       toast.error("Failed to load Area data");
     }finally {

@@ -75,6 +75,7 @@ export interface Design {
   email: string;
   address: string;
   designation: string;
+  contract_type: string;
   designation_label?: string;
   status?: boolean;
 }

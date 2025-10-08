@@ -19,10 +19,14 @@ const validationSchema = Yup.object().shape({
     .required("Please enter Email."),
   address: Yup.string().required("Please enter Address."),
   designation: Yup.string().required("Please select a Designation."),
+  contract_type: Yup.string().required("Please select a Contract Type."),
 });
 
 export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
   const [designations, setDesignations] = useState<Record<string, string>>({});
+  const [contract_types, setContractTypes] = useState<Record<string, string>>(
+    {}
+  );
 
   useEffect(() => {
     const fetchDesignations = async () => {
@@ -36,7 +40,19 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
       }
     };
 
+    const fetchContractTypes = async () => {
+      try {
+        const res = await api.get("common/get-contract-types");
+        const data = (res.data as { data: any }).data;
+
+        setContractTypes(data);
+      } catch (error) {
+        console.error("Failed to load data", error);
+      }
+    };
+
     fetchDesignations();
+    fetchContractTypes();
   }, []);
 
   return (
@@ -160,6 +176,37 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
               </Field>
               <ErrorMessage
                 name="designation"
+                component="div"
+                className="text-red-500 text-sm mt-1"
+              />
+            </div>
+
+            {/* Contract Types */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Contract Type <span className="text-red-500">*</span>
+              </label>
+              <Field
+                as="select"
+                name="contract_type"
+                className={`w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none 
+      ${
+        errors.contract_type && touched.contract_type
+          ? "border-red-500"
+          : "border-gray-300"
+      }`}
+              >
+                <option value="" disabled>
+                  -- Select a Contract Types --
+                </option>
+                {Object.entries(contract_types).map(([key, label]) => (
+                  <option key={key} value={key}>
+                    {label}
+                  </option>
+                ))}
+              </Field>
+              <ErrorMessage
+                name="contract_type"
                 component="div"
                 className="text-red-500 text-sm mt-1"
               />

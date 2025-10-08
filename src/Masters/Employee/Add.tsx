@@ -111,6 +111,7 @@ export default function addEmployee() {
           email: "",
           address: "",
           designation: "",
+          contract_type: "",
           status: true,
         }}
         onSubmit={handleSubmit}
