@@ -16,6 +16,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
   return {
     user: savedUser ? JSON.parse(savedUser) : null,
     token: savedToken,
+    
 
     isAuthenticated: () => {
       const state = get();
@@ -26,7 +27,8 @@ export const useAuthStore = create<AuthState>((set, get) => {
       try {
         const res = await api.post("/login", { email, password });
 
-        const { user, token } = (res.data as { response: { user: any; token: any } }).response;
+        const { user, token } = (res.data as { response: { user: any; token: { plainTextToken: string } } }).response;
+
         const plainToken = token.plainTextToken;
 
         set({ token: plainToken, user });
@@ -45,6 +47,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
       set({ token: null, user: null });
       localStorage.removeItem("auth_token");
       localStorage.removeItem("auth_user");
+      console.log("hhhhhhhhhhhhhhhhhhhhhhh")
     },
   };
 });

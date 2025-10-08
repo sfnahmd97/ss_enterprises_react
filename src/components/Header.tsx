@@ -5,6 +5,7 @@ import api from "../lib/axios";
 import type { UserData } from "../interfaces/common";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
+import { useAuthStore } from "../store/authStore";
 
 
 export default function Header() {
@@ -12,6 +13,7 @@ export default function Header() {
   const [user, setUser] = useState<UserData | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
+  const logout = useAuthStore((state) => state.logout);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -30,7 +32,7 @@ export default function Header() {
     fetchUser();
   }, []);
 
-  const handleLogout = async () => {
+ const handleLogout = async () => {
   Swal.fire({
     title: "Are you sure?",
     text: "You will be logged out of your account.",
@@ -44,10 +46,12 @@ export default function Header() {
     if (result.isConfirmed) {
       try {
         const res = await api.post("/user/log-out");
-        const success = (res.data as { success: any[] }).success; 
+        const success = (res.data as { success: boolean }).success;
+
         if (success) {
-          localStorage.removeItem("token");
+          logout(); // ✅ Zustand logout clears token + user
           navigate("/login");
+          toast.success("You have been logged out.");
         }
       } catch (err) {
         console.error("Logout failed:", err);
@@ -56,6 +60,7 @@ export default function Header() {
     }
   });
 };
+
 
 
   useEffect(() => {
