@@ -174,7 +174,7 @@ export default function Main() {
                     d="M9 5l7 7-7 7"
                   />
                 </svg>
-                <span className="text-gray-700 font-medium">Employee</span>
+                <span className="text-gray-700 font-medium">Employees</span>
               </div>
             </li>
           </ol>

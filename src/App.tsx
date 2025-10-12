@@ -30,9 +30,9 @@ import ListDesign from "./Masters/Design/List";
 import AddDesign from "./Masters/Design/Add";
 import EditDesign from "./Masters/Design/Edit";
 
-import ListEmployee from "./Masters/Employee/List";
-import AddEmployee from "./Masters/Employee/Add";
-import EditEmployee from "./Masters/Employee/Edit";
+import ListEmployee from "./Hrm/Employee/List";
+import AddEmployee from "./Hrm/Employee/Add";
+import EditEmployee from "./Hrm/Employee/Edit";
 
 import ListDistributor from "./Masters/Distributor/List";
 import AddDistributor from "./Masters/Distributor/Add";
@@ -47,6 +47,10 @@ import EditLocation from "./Masters/Location/Edit";
 import ListArea from "./Masters/Area/List";
 import AddArea from "./Masters/Area/Add";
 import EditArea from "./Masters/Area/Edit";
+
+import ListAreaAssign from "./Masters/AreaAssign/List";
+import AddAreaAssign from "./Masters/AreaAssign/Add";
+import EditAreaAssign from "./Masters/AreaAssign/Edit";
 
 export default function App() {
   return (
@@ -124,6 +128,12 @@ export default function App() {
                   <Route path="area/add" element={<AddArea />} />
                   <Route path="area/edit/:id" element={<EditArea />}/>
                   
+
+                   {/* Area Assign*/}
+                  <Route path="area-assign" element={<ListAreaAssign />} />
+                  <Route path="area-assign/add" element={<AddAreaAssign />} />
+                  <Route path="area-assign/edit/:id" element={<EditAreaAssign />}/>
+
                 </Routes>
               </Layout>
             </ProtectedRoute>

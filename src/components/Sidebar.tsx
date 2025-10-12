@@ -42,7 +42,7 @@ const sections: Section[] = [
       { name: "Lamination", path: "/master/finishing", icon: <PaintRoller size={18} /> },
       { name: "Door Part Size", path: "/master/door-part-size", icon: <Ruler size={18} /> },
       { name: "Design", path: "/master/design", icon: <DoorOpen size={18} /> },
-      { name: "Employee", path: "/master/employee", icon: <UsersRound size={18} /> },
+      
       { name: "Distributor", path: "/master/distributor", icon: <Bus size={18} /> },
       {
     name: "Location",
@@ -50,9 +50,14 @@ const sections: Section[] = [
     subMenu: [
       { name: "Manage", path: "/master/location", icon: <CircleSmall size={12} /> },
       { name: "Area", path: "/master/area", icon: <CircleSmall size={12} /> },
+      { name: "Area Assign", path: "/master/area-assign", icon: <CircleSmall size={12} /> },
     ],
   },
     ],
+  },
+   {
+    title: "HRM",
+    items: [{ name: "Employees", path: "/master/employee", icon: <UsersRound size={18} /> },],
   },
 ];
 

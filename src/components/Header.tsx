@@ -49,7 +49,7 @@ export default function Header() {
         const success = (res.data as { success: boolean }).success;
 
         if (success) {
-          logout(); // ✅ Zustand logout clears token + user
+          logout();
           navigate("/login");
           toast.success("You have been logged out.");
         }

@@ -120,3 +120,9 @@ export interface Area {
   location_ids: number[];
   status: boolean;
 }
+
+export interface AreaAssign {
+  id?: number;
+  person_id: number | "";
+  area_id: number | "";
+}
