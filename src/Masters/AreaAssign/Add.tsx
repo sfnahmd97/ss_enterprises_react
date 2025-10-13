@@ -33,7 +33,8 @@ export default function addAreaAssign() {
 
       setErrors(formattedErrors); 
     } else {
-      toast.error(error.response?.data?.message || "Server error");
+      console.log("Server error:"+error.response?.data?.message)
+      toast.error("Server error");
     }
     }
   };
