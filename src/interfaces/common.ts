@@ -126,3 +126,14 @@ export interface AreaAssign {
   person_id: number | "";
   area_id: number | "";
 }
+
+ export interface Customer {
+  id?: number;
+  name: string;
+  phone_no: string | "";
+  email: string | "";
+  state_id: number | "";
+  district_id: number | "";
+  location_id: number | "";
+  status?: boolean;
+}

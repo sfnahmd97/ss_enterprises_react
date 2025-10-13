@@ -45,7 +45,7 @@ export default function editEmployee() {
       const message = (res.data as { message: string }).message;
       if (success) {
         toast.success(message);
-        navigate("/master/employee");
+        navigate("/hrm/employee");
       } else {
         toast.error(message || "Something went wrong");
       }
@@ -91,7 +91,7 @@ export default function editEmployee() {
                 />
               </svg>
               <Link
-                to="/master/employee"
+                to="/hrm/employee"
                 className="text-gray-500 hover:text-green-600 transition"
               >
                 Employees

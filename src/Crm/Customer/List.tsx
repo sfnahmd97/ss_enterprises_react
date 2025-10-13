@@ -11,7 +11,7 @@ import { Pencil, ToggleLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Main() {
-  const [employees, setEmployees] = useState<any[]>([]);
+  const [customers, setCustomers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusLoading, setStatusLoading] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -24,30 +24,29 @@ export default function Main() {
 
   // modal state
   const [showModal, setShowModal] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState<any | null>(null);
+  const [selectedCustomer, setSelectedCustomer] = useState<any | null>(null);
   const [modalLoading, setModalLoading] = useState(false);
 
-  const [inactive_reasons, setInactiveReason] = useState<Record<string, string>>({});
 
-  const fetchEmployee = async (page = 1, search = "") => {
+  const fetchCustomer = async (page = 1, search = "") => {
     try {
       setLoading(true);
 
       const params: any = { page, per_page: perPage };
       if (search) params.search_key = search;
-      const res = await api.get<ListApiResponse<any[]>>(`/employee`, {
+      const res = await api.get<ListApiResponse<any[]>>(`/customer`, {
         params,
       });
 
       const response = res.data;
 
-      setEmployees(response.data);
+      setCustomers(response.data);
       setCurrentPage(response.meta.current_page);
       setPerPage(response.meta.per_page);
       setTotal(response.meta.total);
       setLastPage(response.meta.last_page);
     } catch (error: any) {
-      console.error("Failed to fetch employees:", error);
+      console.error("Failed to fetch customers:", error);
       Swal.fire({
         icon: "error",
         title: "Oops!",
@@ -58,59 +57,26 @@ export default function Main() {
     }
   };
 
-  const changeStatus = (id: number, currentStatus: number) => {
-  confirmAlert(
-    `You are about to change the status of this employee to ${
-      currentStatus === 1 ? "Inactive" : "Active"
-    }.`,
-    async () => {
-      try {
-        let reason = null;
-
-        if (currentStatus === 1) {
-          const { value } = await Swal.fire({
-            title: "Select Reason for Inactive",
-            input: "select",
-            inputOptions: Object.fromEntries(
-      Object.entries(inactive_reasons || {}).map(([key, value]) => [key, value])
-    ),
-            inputPlaceholder: "Choose a reason",
-            showCancelButton: true,
-            confirmButtonText: "Submit",
-            cancelButtonText: "Cancel",
-            inputValidator: (value) => {
-              if (!value) {
-                return "Please select a reason!";
-              }
-              return null;
-            },
-          });
-
-          if (value === undefined) return; 
-          reason = value;
+  const changeStatus = (id: number) => {
+    confirmAlert(
+      "You won’t change the status!",
+      async () => {
+        try {
+          setStatusLoading(id);
+          const res = await api.put(`/customer/change-status/${id}`);
+          const message = (res.data as { message: string }).message;
+          toast.success(message);
+          fetchCustomer(currentPage);
+        } catch (error: any) {
+          console.error("Failed to change status:", error);
+          toast.error(error.response?.data?.message);
+        } finally {
+          setStatusLoading(null);
         }
-
-        setStatusLoading(id);
-
-        const res = await api.put(`/employee/change-status/${id}`, {
-          ...(reason && { reason }),
-        });
-
-        const message = (res.data as { message: string }).message;
-        toast.success(message);
-        fetchEmployee(currentPage);
-      } catch (error: any) {
-        console.error("Failed to change status:", error);
-        toast.error(error.response?.data?.message || "Failed to update status");
-      } finally {
-        setStatusLoading(null);
-      }
-    },
-    () => {
-      console.log("Change status cancelled");
-    }
-  );
-};
+      },
+      () => console.log("Change status cancelled")
+    );
+  };
 
 
 
@@ -118,11 +84,11 @@ export default function Main() {
     try {
       setModalLoading(true);
       setShowModal(true);
-      const res = await api.get(`/employee/${id}`);
+      const res = await api.get(`/customer/${id}`);
       const data = (res.data as { data: any }).data;
-      setSelectedEmployee(data);
+      setSelectedCustomer(data);
     } catch (error: any) {
-      console.error("Failed to fetch employee details:", error);
+      console.error("Failed to fetch customer details:", error);
       toast.error("Failed to load details");
       setShowModal(false);
     } finally {
@@ -130,25 +96,12 @@ export default function Main() {
     }
   };
 
-
-  const fetchInactiveReasons = async () => {
-      try {
-        const res = await api.get("common/get-employee-inactive-reasons");
-        const data = (res.data as { data: any }).data;
-
-        setInactiveReason(data);
-      } catch (error) {
-        console.error("Failed to load data", error);
-      }
-    };
+ 
 
   useEffect(() => {
-    fetchEmployee(currentPage);
+    fetchCustomer(currentPage);
   }, [currentPage]);
 
-  useEffect(() => {
-    fetchInactiveReasons();
-  }, []);
 
   return (
     <div className="p-4">
@@ -174,7 +127,7 @@ export default function Main() {
                     d="M9 5l7 7-7 7"
                   />
                 </svg>
-                <span className="text-gray-700 font-medium">Employees</span>
+                <span className="text-gray-700 font-medium">Customers</span>
               </div>
             </li>
           </ol>
@@ -182,7 +135,7 @@ export default function Main() {
 
         {/* Add Button */}
         <Link
-          to="/hrm/employee/add"
+          to="/crm/customer/add"
           className="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition"
         >
           + Add
@@ -191,7 +144,7 @@ export default function Main() {
 
       <div className="bg-white shadow rounded-xl border border-gray-200">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center p-4 border-b border-gray-200 gap-3">
-          <h6 className="text-lg font-semibold text-gray-800">Employee List</h6>
+          <h6 className="text-lg font-semibold text-gray-800">Customer List</h6>
           <input
             type="text"
             placeholder="Search..."
@@ -199,7 +152,7 @@ export default function Main() {
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
-              fetchEmployee(1, e.target.value);
+              fetchCustomer(1, e.target.value);
             }}
           />
         </div>
@@ -212,7 +165,7 @@ export default function Main() {
                 <th className="px-4 py-3">#</th>
                 <th className="px-4 py-3">Name</th>
                 <th className="px-4 py-3">Phone No.</th>
-                <th className="px-4 py-3">Designation</th>
+                <th className="px-4 py-3">Location</th>
                 <th className="px-4 py-3 text-center">Status</th>
                 <th className="px-4 py-3 text-center">Created at</th>
                 <th className="px-4 py-3 text-center">Actions</th>
@@ -222,14 +175,14 @@ export default function Main() {
               {loading ? (
                 <tr>
                   <td
-                    colSpan={7}
+                    colSpan={6}
                     className="px-4 py-6 text-center text-gray-500 italic"
                   >
                     Loading ...
                   </td>
                 </tr>
-              ) : employees.length > 0 ? (
-                employees.map((val, index) => (
+              ) : customers.length > 0 ? (
+                customers.map((val, index) => (
                   <tr
                     key={val.id}
                     onClick={() => openModal(val.id)} // 👈 open modal when row clicked
@@ -239,8 +192,8 @@ export default function Main() {
                       {(currentPage - 1) * perPage + (index + 1)}
                     </td>
                     <td className="px-4 py-3">{val.name}</td>
-                    <td className="px-4 py-3">{val.phone_no}</td>
-                    <td className="px-4 py-3">{val.designation_label}</td>
+                    <td className="px-4 py-3">{val.phone_no ?? "N/A"}</td>
+                    <td className="px-4 py-3">{val.location.location_name},{val.district.name},{val.state.name}</td>
                     <td className="px-4 py-3 text-center">
                       {val.status ? (
                         <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full">
@@ -268,7 +221,7 @@ export default function Main() {
                       onClick={(e) => e.stopPropagation()} // prevent row click from firing when clicking buttons
                     >
                       <Link
-                        to={`/hrm/employee/edit/${val.id}`}
+                        to={`/crm/customer/edit/${val.id}`}
                         className="inline-flex items-center justify-center p-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
                         title="Edit"
                       >
@@ -276,7 +229,7 @@ export default function Main() {
                       </Link>
 
                       <button
-                        onClick={() => changeStatus(val.id, val.status)}
+                        onClick={() => changeStatus(val.id)}
                         disabled={statusLoading === val.id}
                         className={`inline-flex items-center justify-center p-2 text-white rounded-lg shadow transition ${
                           statusLoading === val.id
@@ -297,7 +250,7 @@ export default function Main() {
               ) : (
                 <tr>
                   <td
-                    colSpan={7}
+                    colSpan={6}
                     className="px-4 py-6 text-center text-gray-500 italic"
                   >
                     Data not found.
@@ -336,12 +289,12 @@ export default function Main() {
               </button>
 
               <h2 className="text-2xl font-bold text-gray-900 mb-4 border-b pb-3">
-                Employee Details
+                Customer Details
               </h2>
 
               {modalLoading ? (
                 <p className="text-gray-500">Loading details...</p>
-              ) : selectedEmployee ? (
+              ) : selectedCustomer ? (
                 <div className="space-y-5">
                   {/* Details Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -349,32 +302,16 @@ export default function Main() {
                       <p className="text-sm font-semibold text-gray-600">
                         Name
                       </p>
-                      <p className="text-gray-900">{selectedEmployee.name}</p>
+                      <p className="text-gray-900">{selectedCustomer.name}</p>
                     </div>
 
-                    <div className="bg-gray-50 rounded-lg p-3">
-                      <p className="text-sm font-semibold text-gray-600">
-                        Designation
-                      </p>
-                      <p className="text-gray-900">
-                        {selectedEmployee.designation_label}
-                      </p>
-                    </div>
-
-                    <div className="bg-gray-50 rounded-lg p-3">
-                      <p className="text-sm font-semibold text-gray-600">
-                        Contract Type
-                      </p>
-                      <p className="text-gray-900">
-                        {selectedEmployee.contract_type_label}
-                      </p>
-                    </div>
+                    
 
                     <div className="bg-gray-50 rounded-lg p-3">
                       <p className="text-sm font-semibold text-gray-600">
                         email
                       </p>
-                      <p className="text-gray-900">{selectedEmployee.email}</p>
+                      <p className="text-gray-900">{selectedCustomer.email ?? "N/A"}</p>
                     </div>
 
                     <div className="bg-gray-50 rounded-lg p-3">
@@ -382,18 +319,37 @@ export default function Main() {
                         Phone No
                       </p>
                       <p className="text-gray-900">
-                        {selectedEmployee.phone_no}
+                        {selectedCustomer.phone_no}
                       </p>
                     </div>
 
                     <div className="bg-gray-50 rounded-lg p-3">
                       <p className="text-sm font-semibold text-gray-600">
-                        Address
+                        Location
                       </p>
                       <p className="text-gray-900">
-                        {selectedEmployee.address}
+                        {selectedCustomer.location.location_name}
                       </p>
                     </div>
+
+                    <div className="bg-gray-50 rounded-lg p-3">
+                      <p className="text-sm font-semibold text-gray-600">
+                        District
+                      </p>
+                      <p className="text-gray-900">
+                        {selectedCustomer.district.name}
+                      </p>
+                    </div>
+
+                    <div className="bg-gray-50 rounded-lg p-3">
+                      <p className="text-sm font-semibold text-gray-600">
+                        State
+                      </p>
+                      <p className="text-gray-900">
+                        {selectedCustomer.state.name}
+                      </p>
+                    </div>
+                    
 
                     <div className="bg-gray-50 rounded-lg p-3">
                       <p className="text-sm font-semibold text-gray-600">
@@ -401,12 +357,12 @@ export default function Main() {
                       </p>
                       <p
                         className={`font-medium ${
-                          selectedEmployee.status
+                          selectedCustomer.status
                             ? "text-green-600"
                             : "text-red-600"
                         }`}
                       >
-                        {selectedEmployee.status ? "Active" : "Inactive"+ "("+selectedEmployee.inactive_reason_label+")"}
+                        {selectedCustomer.status ? "Active" : "Inactive"+ "("+selectedCustomer.inactive_reason_label+")"}
                       </p>
                     </div>
 
@@ -415,7 +371,7 @@ export default function Main() {
                         Created At
                       </p>
                       <p className="text-gray-900">
-                        {new Date(selectedEmployee.created_at).toLocaleString(
+                        {new Date(selectedCustomer.created_at).toLocaleString(
                           "en-IN"
                         )}
                       </p>

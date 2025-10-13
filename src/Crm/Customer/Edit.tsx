@@ -1,39 +1,53 @@
+import { useEffect, useState } from "react";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import MasterForm from "./MasterForm";
-import { useNavigate, Link } from "react-router-dom";
 import api from "../../lib/axios";
 import toast from "react-hot-toast";
 import type { FormikHelpers } from "formik";
-import type { Employee } from "../../interfaces/common";
+import type { Customer } from "../../interfaces/common";
+import PageLoader from "../../components/common/pageLoader";
 
-export default function addEmployee() {
+export default function editCustomer() {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const [initialValues, setInitialValues] = useState<Customer | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCustomer = async () => {
+      try {
+        setLoading(true);
+
+        const res = await api.get(`/customer/${id}/edit`);
+        const data = (res.data as { data: any }).data;
+
+        setInitialValues({
+          ...data,
+          status: data.status === 1,
+          state_id: Number(data.state_id),
+          district_id: Number(data.district_id),
+          location_id: Number(data.location_id),
+        });
+      } catch (err) {
+        toast.error("Failed to load Customer data");
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (id) fetchCustomer();
+  }, [id]);
 
   const handleSubmit = async (
-    values: Employee,
-    { setErrors }: FormikHelpers<Employee>
+    values: Customer,
+    { setErrors }: FormikHelpers<Customer>
   ) => {
     try {
-      const formData = new FormData();
-
-      Object.keys(values).forEach((key) => {
-        const value = (values as any)[key];
-
-         if (key === "status") {
-          formData.append("status", value ? "1" : "0");
-        } else if (value !== null && value !== undefined) {
-          formData.append(key, value);
-        }
-      });
-
-      const res = await api.post("/employee", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const res = await api.put(`/customer/${id}`, values);
       const success = (res.data as { success: any[] }).success;
       const message = (res.data as { message: string }).message;
-
       if (success) {
         toast.success(message);
-        navigate("/hrm/employee");
+        navigate("/crm/customer");
       } else {
         toast.error(message || "Something went wrong");
       }
@@ -53,9 +67,11 @@ export default function addEmployee() {
     }
   };
 
+  if (loading) return <PageLoader />;
+  if (!initialValues) return <p>Loading...</p>;
+
   return (
     <div className="p-6">
-      {/* Breadcrumbs */}
       <nav className="flex text-sm text-gray-600" aria-label="Breadcrumb">
         <ol className="inline-flex items-center space-x-1 md:space-x-3">
           <li>
@@ -77,10 +93,10 @@ export default function addEmployee() {
                 />
               </svg>
               <Link
-                to="/hrm/employee"
+                to="/crm/customer"
                 className="text-gray-500 hover:text-green-600 transition"
               >
-                Employees
+                Customers
               </Link>
             </div>
           </li>
@@ -99,23 +115,15 @@ export default function addEmployee() {
                   d="M9 5l7 7-7 7"
                 />
               </svg>
-              <span className="text-gray-700 font-medium">Add</span>
+              <span className="text-gray-700 font-medium">Edit</span>
             </div>
           </li>
         </ol>
       </nav>
       <MasterForm
-        initialValues={{
-          name: "",
-          phone_no: "",
-          email: "",
-          address: "",
-          designation: "",
-          contract_type: "",
-          status: true,
-        }}
+        initialValues={initialValues}
         onSubmit={handleSubmit}
-        mode="create"
+        mode="edit"
       />
     </div>
   );

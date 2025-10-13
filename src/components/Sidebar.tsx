@@ -15,6 +15,7 @@ import {
   Bus,
   Map,
   CircleSmall,
+  ContactRound,
 } from "lucide-react";
 
 interface MenuItem {
@@ -57,7 +58,11 @@ const sections: Section[] = [
   },
    {
     title: "HRM",
-    items: [{ name: "Employees", path: "/master/employee", icon: <UsersRound size={18} /> },],
+    items: [{ name: "Employees", path: "/hrm/employee", icon: <UsersRound size={18} /> },],
+  },
+  {
+    title: "CRM",
+    items: [{ name: "Customers", path: "/crm/customer", icon: <ContactRound size={18} /> },],
   },
 ];
 

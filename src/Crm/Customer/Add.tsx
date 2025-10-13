@@ -3,14 +3,14 @@ import { useNavigate, Link } from "react-router-dom";
 import api from "../../lib/axios";
 import toast from "react-hot-toast";
 import type { FormikHelpers } from "formik";
-import type { Employee } from "../../interfaces/common";
+import type { Customer } from "../../interfaces/common";
 
-export default function addEmployee() {
+export default function addCustomer() {
   const navigate = useNavigate();
 
   const handleSubmit = async (
-    values: Employee,
-    { setErrors }: FormikHelpers<Employee>
+    values: Customer,
+    { setErrors }: FormikHelpers<Customer>
   ) => {
     try {
       const formData = new FormData();
@@ -25,7 +25,7 @@ export default function addEmployee() {
         }
       });
 
-      const res = await api.post("/employee", formData, {
+      const res = await api.post("/customer", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       const success = (res.data as { success: any[] }).success;
@@ -33,7 +33,7 @@ export default function addEmployee() {
 
       if (success) {
         toast.success(message);
-        navigate("/hrm/employee");
+        navigate("/crm/customer");
       } else {
         toast.error(message || "Something went wrong");
       }
@@ -77,10 +77,10 @@ export default function addEmployee() {
                 />
               </svg>
               <Link
-                to="/hrm/employee"
+                to="/crm/customer"
                 className="text-gray-500 hover:text-green-600 transition"
               >
-                Employees
+                Customers
               </Link>
             </div>
           </li>
@@ -109,9 +109,9 @@ export default function addEmployee() {
           name: "",
           phone_no: "",
           email: "",
-          address: "",
-          designation: "",
-          contract_type: "",
+          state_id: "",
+          district_id: "",
+          location_id: "",
           status: true,
         }}
         onSubmit={handleSubmit}

@@ -52,6 +52,10 @@ import ListAreaAssign from "./Masters/AreaAssign/List";
 import AddAreaAssign from "./Masters/AreaAssign/Add";
 import EditAreaAssign from "./Masters/AreaAssign/Edit";
 
+import ListCustomer from "./Crm/Customer/List";
+import AddCustomer from "./Crm/Customer/Add";
+import EditCustomer from "./Crm/Customer/Edit";
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -106,10 +110,6 @@ export default function App() {
                   <Route path="design/add" element={<AddDesign />} />
                   <Route path="design/edit/:id" element={<EditDesign />}/>
 
-                  {/* Employee */}
-                  <Route path="employee" element={<ListEmployee />} />
-                  <Route path="employee/add" element={<AddEmployee />} />
-                  <Route path="employee/edit/:id" element={<EditEmployee />}/>
 
                   {/* Distributor */}
                   <Route path="distributor" element={<ListDistributor />} />
@@ -133,6 +133,44 @@ export default function App() {
                   <Route path="area-assign" element={<ListAreaAssign />} />
                   <Route path="area-assign/add" element={<AddAreaAssign />} />
                   <Route path="area-assign/edit/:id" element={<EditAreaAssign />}/>
+
+                </Routes>
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/hrm/*"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Routes>
+
+                  {/* Employee */}
+                  <Route path="employee" element={<ListEmployee />} />
+                  <Route path="employee/add" element={<AddEmployee />} />
+                  <Route path="employee/edit/:id" element={<EditEmployee />}/>
+
+
+                </Routes>
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/crm/*"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Routes>
+
+                  {/* Employee */}
+                  <Route path="customer" element={<ListCustomer />} />
+                  <Route path="customer/add" element={<AddCustomer />} />
+                  <Route path="customer/edit/:id" element={<EditCustomer />}/>
+
 
                 </Routes>
               </Layout>
