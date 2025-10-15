@@ -150,6 +150,7 @@ export default function Main() {
               <tr>
                 <th className="px-4 py-3">#</th>
                 <th className="px-4 py-3">Area Name</th>
+                <th className="px-4 py-3">Type</th>
                 <th className="px-4 py-3 text-center">Status</th>
                 <th className="px-4 py-3 text-center">Created at</th>
                 <th className="px-4 py-3 text-center">Actions</th>
@@ -171,6 +172,7 @@ export default function Main() {
                   >
                     <td className="px-4 py-3">{(currentPage - 1) * perPage + (index + 1)}</td>
                     <td className="px-4 py-3">{val.area_name}</td>
+                    <td className="px-4 py-3">{val.type_label}</td>
                     <td className="px-4 py-3 text-center">
                       {val.status ? (
                         <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full">

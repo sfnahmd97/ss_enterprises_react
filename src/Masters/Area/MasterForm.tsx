@@ -28,12 +28,14 @@ const validationSchema = Yup.object().shape({
   location_ids: Yup.array()
     .of(Yup.number())
     .min(1, "Please select at least one Location."),
+    type: Yup.string().required("Please select a Area Type."),
 });
 
 export default function AreaMasterForm({ initialValues, onSubmit, mode }: Props) {
   const [states, setStates] = useState<States[]>([]);
   const [districts, setDistricts] = useState<Districts[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
+  const [area_types, setAreaTypes] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const fetchStates = async () => {
@@ -41,6 +43,19 @@ export default function AreaMasterForm({ initialValues, onSubmit, mode }: Props)
       setStates((res.data as { data: States[] }).data);
     };
     fetchStates();
+
+
+    const fetchAreaTypes = async () => {
+          try {
+            const res = await api.get("common/get-area-types");
+            const data = (res.data as { data: any }).data;
+            setAreaTypes(data);
+          } catch (error) {
+            console.error("Failed to load data", error);
+          }
+        };
+
+        fetchAreaTypes();
 
     if (mode === "edit" && initialValues?.state_id) {
       const loadDistrictsAndLocations = async () => {
@@ -219,6 +234,25 @@ export default function AreaMasterForm({ initialValues, onSubmit, mode }: Props)
               className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
             <ErrorMessage name="area_name" component="div" className="text-red-500 text-sm mt-1" />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Area Type <span className="text-red-500">*</span>
+            </label>
+            <Field
+              as="select"
+              name="type"
+              className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="">-- Select a type --</option>
+              {Object.entries(area_types).map(([key, label]) => (
+                  <option key={key} value={key}>
+                    {label}
+                  </option>
+                ))}
+            </Field>
+            <ErrorMessage name="type" component="div" className="text-red-500 text-sm mt-1" />
           </div>
 
           {/* STATUS */}

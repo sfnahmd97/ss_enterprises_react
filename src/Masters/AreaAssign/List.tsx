@@ -10,6 +10,9 @@ export default function Main() {
   const [area_assigns, setAreaAssigns] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedAreaType, setSelectedAreaType] = useState("");
+  const [areaTypes, setAreaTypes] = useState<Record<string, string>>({});
+  
 
   // pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -17,12 +20,12 @@ export default function Main() {
   const [total, setTotal] = useState(0);
   const [lastPage, setLastPage] = useState(1);
 
-  const fetchAreaAssigns = async (page = 1, search = "") => {
+  const fetchAreaAssigns = async (page = 1, search = "",areaType ="") => {
     try {
       setLoading(true);
-
       const params: any = { page, per_page: perPage };
       if (search) params.search_key = search;
+      if (areaType) params.assign_type = areaType;
       const res = await api.get<ListApiResponse<any[]>>(`/area-assign`, {
         params,
       });
@@ -46,11 +49,24 @@ export default function Main() {
     }
   };
 
+
+  const fetchAreaTypes = async () => {
+          try {
+            const res = await api.get("common/get-area-types");
+            const data = (res.data as { data: any }).data;
+            setAreaTypes(data);
+          } catch (error) {
+            console.error("Failed to load data", error);
+          }
+        };
   
+useEffect(() => {
+    fetchAreaTypes();
+  }, []);
 
   useEffect(() => {
-    fetchAreaAssigns(currentPage);
-  }, [currentPage]);
+    fetchAreaAssigns(currentPage,searchTerm, selectedAreaType);
+  }, [currentPage,searchTerm, selectedAreaType]);
 
   return (
     <div className="p-4">
@@ -98,16 +114,39 @@ export default function Main() {
           <h6 className="text-lg font-semibold text-gray-800">
             Area Assign List
           </h6>
-          <input
-            type="text"
-            placeholder="Search..."
-            className="px-3 py-1.5 w-60 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              fetchAreaAssigns(1, e.target.value);
-            }}
-          />
+
+          <div className="flex gap-3">
+            {/* Filter: Design Type */}
+            <select
+              value={selectedAreaType}
+              onChange={(e) => {
+                setSelectedAreaType(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="w-60 px-4 py-2 text-sm bg-white border border-gray-300 rounded-xl shadow-sm 
+             focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 
+             hover:border-gray-400 transition"
+            >
+              <option value="">All Types</option>
+             {Object.entries(areaTypes).map(([key, label]) => (
+                  <option key={key} value={key}>
+                    {label}
+                  </option>
+                ))}
+            </select>
+
+            {/* Search box */}
+            <input
+              type="text"
+              placeholder="Search..."
+              className="px-3 py-1.5 w-60 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
+            />
+          </div>
         </div>
 
         {/* Table */}
@@ -116,7 +155,8 @@ export default function Main() {
             <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
               <tr>
                 <th className="px-4 py-3">#</th>
-                <th className="px-4 py-3">Sales Executive</th>
+                <th className="px-4 py-3">Assign To</th>
+                <th className="px-4 py-3">Assign Type</th>
                 <th className="px-4 py-3">Area</th>
                 <th className="px-4 py-3 text-center">Created at</th>
                 <th className="px-4 py-3 text-center">Actions</th>
@@ -142,6 +182,7 @@ export default function Main() {
                       {(currentPage - 1) * perPage + (index + 1)}
                     </td>
                     <td className="px-4 py-3">{val.person.name}</td>
+                    <td className="px-4 py-3">{val.person_type_label}</td>
                     <td className="px-4 py-3">{val.area.area_name}</td>
                     
                     <td className="px-4 py-3 text-center">

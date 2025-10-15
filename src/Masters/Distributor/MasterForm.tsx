@@ -20,11 +20,9 @@ const validationSchema = Yup.object().shape({
     .email("Please enter a valid Email.")
     .required("Please enter Email."),
   address: Yup.string().required("Please enter Address."),
-  area: Yup.string().required("Please enter area."),
 });
 
 export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
-
   useEffect(() => {}, []);
 
   return (
@@ -121,23 +119,7 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
                 className="text-red-500 text-sm mt-1"
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Area <span className="text-red-500">*</span>
-              </label>
-              <Field
-                type="text"
-                name="area"
-                placeholder="Enter Area"
-                className={`w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none 
-      ${errors.area && touched.area ? "border-red-500" : "border-gray-300"}`}
-              />
-              <ErrorMessage
-                name="area"
-                component="div"
-                className="text-red-500 text-sm mt-1"
-              />
-            </div>
+            
 
             {/* Status */}
             <div className="flex items-center gap-2 mt-6 col-span-2">

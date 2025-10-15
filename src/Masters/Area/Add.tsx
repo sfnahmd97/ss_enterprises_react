@@ -92,7 +92,7 @@ export default function addLocation() {
           </ol>
         </nav>
     <MasterForm
-      initialValues={{ area_name: "",state_id:"",district_ids:[],location_ids:[], status: true }}
+      initialValues={{ area_name:"",type:"",state_id:"",district_ids:[],location_ids:[], status: true }}
       onSubmit={handleSubmit}
       mode="create"
     />

@@ -110,7 +110,6 @@ export default function addDistributor() {
           phone_no: "",
           email: "",
           address: "",
-          area: "",
           status: true,
         }}
         onSubmit={handleSubmit}

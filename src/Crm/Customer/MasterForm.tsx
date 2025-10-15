@@ -19,9 +19,7 @@ interface Props {
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Please enter Name."),
   phone_no: Yup.string().required("Please enter Phone Number."),
-  email: Yup.string()
-    .email("Please enter a valid Email.")
-    .required("Please enter Email."),
+  email: Yup.string().nullable().email("Please enter a valid Email."),
   state_id: Yup.string().required("Please choose a state."),
   district_id: Yup.string().required("Please choose a district."),
   location_id: Yup.string().required("Please choose a location."),
@@ -159,7 +157,7 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
               {/* Email */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Email <span className="text-red-500">*</span>
+                  Email
                 </label>
                 <Field
                   type="email"

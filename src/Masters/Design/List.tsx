@@ -43,7 +43,6 @@ export default function Main() {
 
   const fetchDesign = async (page = 1, search = "", designType = "") => {
     try {
-      console.log("Tested");
       setLoading(true);
       const params: any = { page, per_page: perPage };
       if (search) params.search_key = search;

@@ -83,10 +83,9 @@ export interface Design {
 export interface Distributor {
   id?: number;
   name: string;
-  phone_no: string;
-  email: string;
-  address: string;
-  area: string;
+  phone_no?: string;
+  email?: string;
+  address?: string;
   status?: boolean;
 }
 
@@ -115,6 +114,7 @@ export interface Distributor {
 export interface Area {
   id?: number;
   area_name: string;
+  type: string;
   state_id: number | "";
   district_ids: number[];
   location_ids: number[];
@@ -123,6 +123,7 @@ export interface Area {
 
 export interface AreaAssign {
   id?: number;
+  assign_type?: string;
   person_id: number | "";
   area_id: number | "";
 }
