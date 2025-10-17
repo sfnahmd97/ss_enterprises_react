@@ -119,6 +119,7 @@ export interface Area {
   district_ids: number[];
   location_ids: number[];
   status: boolean;
+  is_all_location?: Record<number, boolean>;
 }
 
 export interface AreaAssign {

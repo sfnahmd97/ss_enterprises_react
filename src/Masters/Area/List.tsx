@@ -159,7 +159,7 @@ export default function Main() {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="px-4 py-6 text-center text-gray-500 italic">
+                  <td colSpan={6} className="px-4 py-6 text-center text-gray-500 italic">
                     Loading ...
                   </td>
                 </tr>
@@ -224,7 +224,7 @@ export default function Main() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={5} className="px-4 py-6 text-center text-gray-500 italic">
+                  <td colSpan={6} className="px-4 py-6 text-center text-gray-500 italic">
                     Data not found.
                   </td>
                 </tr>

@@ -117,6 +117,7 @@ export default function AreaMasterForm({ initialValues, onSubmit, mode }: Props)
             <ErrorMessage name="state_id" component="div" className="text-red-500 text-sm mt-1" />
           </div>
 
+<Field type="hidden" name="is_all_location" />
           <div>
   <label className="block text-sm font-medium text-gray-700 mb-1">
     District(s) <span className="text-red-500">*</span>
@@ -166,35 +167,53 @@ export default function AreaMasterForm({ initialValues, onSubmit, mode }: Props)
   }
 
   // Case 2️⃣: When new district(s) are added → ask with SweetAlert
-  if (selectedDistrictIds.length > previousDistrictIds.length) {
+if (selectedDistrictIds.length > previousDistrictIds.length) {
+  const newlyAdded = selectedDistrictIds.filter(id => !previousDistrictIds.includes(id));
+
+  const newIsAllLocation = { ...values.is_all_location };
+
+  // Loop through each newly added district
+  for (const districtId of newlyAdded) {
     const result = await Swal.fire({
       title: "Add all locations?",
-      text: "Do you want to add all locations under the selected districts?",
+      text: `Do you want to add all locations under this district (ID: ${districtId})?`,
       icon: "question",
       showCancelButton: true,
       confirmButtonText: "Yes",
       cancelButtonText: "No",
     });
 
-    const res = await api.post(`common/get-locations-by-districts`, {
-      district_ids: selectedDistrictIds,
-    });
-    const newLocations = (res.data as { data: Location[] }).data;
+    newIsAllLocation[districtId] = result.isConfirmed;
+  }
 
-    setLocations(newLocations);
+  // Fetch all locations for all selected districts
+  const res = await api.post(`common/get-locations-by-districts`, {
+    district_ids: selectedDistrictIds,
+  });
+  const newLocations = (res.data as { data: Location[] }).data;
+  setLocations(newLocations);
 
-    if (result.isConfirmed) {
-      // select all locations
-      setFieldValue("location_ids", newLocations.map(l => l.id!));
-    } else {
-      // retain only previously selected locations that are still valid
-      const prevSelected =
-        values.location_ids?.filter(id =>
-          newLocations.some(l => l.id === id)
-        ) || [];
-      setFieldValue("location_ids", prevSelected);
+  // Merge location selection logic
+  let updatedLocationIds: number[] = [];
+
+  // For each selected district, if is_all_location = true, include all its locations
+  for (const districtId of selectedDistrictIds) {
+    if (newIsAllLocation[districtId]) {
+      const locRes = await api.post(`common/get-locations-by-districts`, {
+        district_ids: [districtId],
+      });
+      const locData = (locRes.data as { data: Location[] }).data;
+      updatedLocationIds.push(...locData.map(l => l.id!));
     }
   }
+
+  // Remove duplicates
+  updatedLocationIds = Array.from(new Set(updatedLocationIds));
+
+  setFieldValue("location_ids", updatedLocationIds);
+  setFieldValue("is_all_location", newIsAllLocation);
+}
+
 }}
 
 
