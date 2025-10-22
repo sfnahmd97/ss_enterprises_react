@@ -56,6 +56,10 @@ import ListCustomer from "./Crm/Customer/List";
 import AddCustomer from "./Crm/Customer/Add";
 import EditCustomer from "./Crm/Customer/Edit";
 
+import ListShiftTime from "./Masters/ShiftTime/List";
+import AddShiftTime from "./Masters/ShiftTime/Add";
+import EditShiftTime from "./Masters/ShiftTime/Edit";
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -133,6 +137,11 @@ export default function App() {
                   <Route path="area-assign" element={<ListAreaAssign />} />
                   <Route path="area-assign/add" element={<AddAreaAssign />} />
                   <Route path="area-assign/edit/:id" element={<EditAreaAssign />}/>
+
+                  {/* Shift Time Master */}
+                  <Route path="shift-time" element={<ListShiftTime />} />
+                  <Route path="shift-time/add" element={<AddShiftTime />} />
+                  <Route path="shift-time/edit/:id" element={<EditShiftTime />}/>
 
                 </Routes>
               </Layout>

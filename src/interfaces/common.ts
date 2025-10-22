@@ -139,3 +139,11 @@ export interface AreaAssign {
   location_id: number | "";
   status?: boolean;
 }
+
+ export interface ShiftTime {
+  id?: number;
+  title: string;
+  start_time: string;
+  end_time: string;
+  status?: boolean;
+}
