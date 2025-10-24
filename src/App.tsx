@@ -60,6 +60,9 @@ import ListShiftTime from "./Masters/ShiftTime/List";
 import AddShiftTime from "./Masters/ShiftTime/Add";
 import EditShiftTime from "./Masters/ShiftTime/Edit";
 
+import EditProfile from "./Profile/EditProfile";
+import ChangePassword from "./Profile/changePassword";
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -180,6 +183,22 @@ export default function App() {
                   <Route path="customer/add" element={<AddCustomer />} />
                   <Route path="customer/edit/:id" element={<EditCustomer />}/>
 
+
+                </Routes>
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/profile/*"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Routes>
+
+                  <Route path="edit" element={<EditProfile />}/>
+                  <Route path="change-password" element={<ChangePassword />}/>
 
                 </Routes>
               </Layout>

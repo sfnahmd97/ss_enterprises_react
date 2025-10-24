@@ -6,6 +6,7 @@ import type { UserData } from "../interfaces/common";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 import { useAuthStore } from "../store/authStore";
+import { Link } from "react-router-dom";
 
 
 export default function Header() {
@@ -107,12 +108,16 @@ export default function Header() {
 
               {/* Menu Items */}
               <div className="flex flex-col p-2">
-                <button className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100 text-sm text-gray-700">
+                <Link to="/profile/edit" className="hover:bg-gray-100">
+                <button className="flex items-center gap-2 px-3 py-2 rounded-md text-sm text-gray-700">
                   <User size={16} /> Profile
                 </button>
-                <button className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100 text-sm text-gray-700">
+                </Link>
+                <Link to="/profile/change-password" className="hover:bg-gray-100">
+                <button className="flex items-center gap-2 px-3 py-2 rounded-md  text-sm text-gray-700">
                   <Edit3 size={16} /> Change Password
                 </button>
+                </Link>
                 <button
                   onClick={handleLogout}
                   className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-red-50 text-sm text-red-600"

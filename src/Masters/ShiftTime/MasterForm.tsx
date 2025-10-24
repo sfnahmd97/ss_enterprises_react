@@ -15,16 +15,7 @@ interface Props {
 const validationSchema = Yup.object().shape({
   title: Yup.string().required("Please Enter Title"),
   start_time: Yup.string().required("Please Enter a Start Time"),
-  end_time: Yup.string()
-    .required("Please Enter an End Time")
-    .test(
-      "is-greater",
-      "End Time must be greater than Start Time",
-      function (value) {
-        const { start_time } = this.parent;
-        return start_time && value ? value > start_time : true;
-      }
-    ),
+  end_time: Yup.string().required("Please Enter an End Time")
 });
 
 export default function MasterForm({ initialValues, onSubmit, mode }: Props) {

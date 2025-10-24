@@ -5,8 +5,6 @@ import toast from "react-hot-toast";
 import type { FormikHelpers } from "formik";
 import type { Color } from "../../interfaces/common";
 
-
-
 export default function addColor() {
   const navigate = useNavigate();
 
