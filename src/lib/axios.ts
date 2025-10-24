@@ -24,10 +24,12 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    
     console.error(" API Error:", error.response?.status, error.response?.data); // debug
-    if (error.response?.status === 401) {
-      window.location.href = "/login";
-    }
+    if ([401, 403, 419, 500].includes(error.response?.status)) {
+  localStorage.removeItem("auth_token"); 
+  window.location.href = "/login";
+}
     return Promise.reject(error);
   }
 );
