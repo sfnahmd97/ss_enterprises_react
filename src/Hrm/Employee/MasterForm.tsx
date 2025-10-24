@@ -59,9 +59,15 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={(values, formikHelpers) => onSubmit(values, formikHelpers)}
+      onSubmit={async (values, formikHelpers) => {
+        try {
+          await onSubmit(values, formikHelpers); // ✅ button remains disabled on success
+        } catch (error) {
+          formikHelpers.setSubmitting(false); // ✅ enable button only on error
+        }
+      }}
     >
-      {({ values, setFieldValue, errors, touched }) => (
+      {({ values, setFieldValue, errors, touched,isSubmitting }) => (
         <Form className="max-w-2xl mx-auto bg-white shadow-lg rounded-xl p-6 space-y-6">
           <h2 className="text-xl font-bold text-gray-800">
             {mode === "create" ? "Add Employee" : "Edit Employee"}
@@ -231,14 +237,17 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
           </div>
 
           <div className="flex gap-3 pt-4 justify-end">
-            <button
-              type="submit"
-              className="px-5 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 shadow transition"
-            >
-              {mode === "create" ? "Create" : "Update"}
-            </button>
+           <button
+                type="submit"
+                disabled={isSubmitting}
+                className={`px-5 py-2 bg-blue-600 text-white text-sm rounded-md shadow transition 
+                ${isSubmitting ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"}`}
+              >
+                {mode === "create" ? "Create" : "Update"}
+              </button>
             <button
               type="reset"
+              disabled={isSubmitting}
               className="px-5 py-2 bg-gray-200 text-gray-800 text-sm rounded-md hover:bg-gray-300 shadow transition"
             >
               Reset
