@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
   const login = useAuthStore((state) => state.login);
@@ -10,50 +11,22 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   // const [remember, setRemember] = useState(false);
 
-const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  setLoading(true);
-  const success = await login(email, password);
-  setLoading(false);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    const success = await login(email, password);
+    setLoading(false);
 
-  if (success) {
-    navigate("/dashboard");
-  }
-  else {
-    alert("Invalid credentials, please try again.");
-  }
-};
-
+    if (success) {
+      navigate("/dashboard");
+    } else {
+      toast.error("Invalid credentials, please try again.");
+    }
+  };
 
   return (
-    // <div className="flex h-screen items-center justify-center bg-gray-100">
-    //   <form
-    //     onSubmit={handleLogin}
-    //     className="bg-white shadow-md rounded-xl p-8 w-96"
-    //   >
-    //     <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
-    //     <input
-    //       type="email"
-    //       placeholder="Email"
-    //       className="w-full mb-4 p-2 border rounded"
-    //       required
-    //     />
-    //     <input
-    //       type="password"
-    //       placeholder="Password"
-    //       className="w-full mb-4 p-2 border rounded"
-    //       required
-    //     />
-    //     <button
-    //       type="submit"
-    //       className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
-    //     >
-    //       Login
-    //     </button>
-    //   </form>
-    // </div>
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
       <div className="w-full max-w-4xl bg-white shadow-lg rounded-2xl overflow-hidden grid md:grid-cols-2">
         {/* Left side (image / decoration) */}
@@ -133,12 +106,12 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
             {/* Buttons */}
             <button
-  type="submit"
-  disabled={loading}
-  className="w-full sm:w-auto px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
->
-  {loading ? "Logging in..." : "Login"}
-</button>
+              type="submit"
+              disabled={loading}
+              className="w-full sm:w-auto px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+            >
+              {loading ? "Logging in..." : "Login"}
+            </button>
           </form>
         </div>
       </div>

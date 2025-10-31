@@ -211,6 +211,7 @@ export default function Main() {
               <tr>
                 <th className="px-4 py-3">#</th>
                 <th className="px-4 py-3">Name</th>
+                <th className="px-4 py-3">Email</th>
                 <th className="px-4 py-3">Phone No.</th>
                 <th className="px-4 py-3">Designation</th>
                 <th className="px-4 py-3 text-center">Status</th>
@@ -239,6 +240,7 @@ export default function Main() {
                       {(currentPage - 1) * perPage + (index + 1)}
                     </td>
                     <td className="px-4 py-3">{val.name}</td>
+                    <td className="px-4 py-3">{val.email}</td>
                     <td className="px-4 py-3">{val.phone_no}</td>
                     <td className="px-4 py-3">{val.designation_label}</td>
                     <td className="px-4 py-3 text-center">
