@@ -176,7 +176,7 @@ export default function Main() {
               {loading ? (
                 <tr>
                   <td
-                    colSpan={6}
+                    colSpan={8}
                     className="px-4 py-6 text-center text-gray-500 italic"
                   >
                     Loading ...
@@ -252,7 +252,7 @@ export default function Main() {
               ) : (
                 <tr>
                   <td
-                    colSpan={6}
+                    colSpan={8}
                     className="px-4 py-6 text-center text-gray-500 italic"
                   >
                     Data not found.

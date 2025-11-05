@@ -30,9 +30,7 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
         const res = await api.get("common/get-door-parts"); 
         const data = (res.data as { data: any }).data;
 
-         const filtered = data.filter((item: any) => item.key !== 'panel');
-
-      setDoorParts(filtered);
+      setDoorParts(data);
       } catch (error) {
         console.error("Failed to load door parts", error);
       }
