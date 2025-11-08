@@ -327,6 +327,15 @@ export default function Main() {
 
                     <div className="bg-gray-50 rounded-lg p-3">
                       <p className="text-sm font-semibold text-gray-600">
+                        Brand
+                      </p>
+                      <p className="text-gray-900">
+                        {selectedCustomer.brand.name}
+                      </p>
+                    </div>
+
+                    <div className="bg-gray-50 rounded-lg p-3">
+                      <p className="text-sm font-semibold text-gray-600">
                         Location
                       </p>
                       <p className="text-gray-900">

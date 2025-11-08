@@ -137,6 +137,7 @@ export interface AreaAssign {
   state_id: number | "";
   district_id: number | "";
   location_id: number | "";
+  brand_id: number | "";
   status?: boolean;
 }
 
@@ -145,5 +146,11 @@ export interface AreaAssign {
   title: string;
   start_time: string;
   end_time: string;
+  status?: boolean;
+}
+
+export interface Brand {
+  id?: number;
+  name: string;
   status?: boolean;
 }

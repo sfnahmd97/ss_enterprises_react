@@ -17,6 +17,7 @@ import {
   CircleSmall,
   ContactRound,
   Timer,
+  LeafyGreen,
 } from "lucide-react";
 
 interface MenuItem {
@@ -45,7 +46,7 @@ const sections: Section[] = [
       { name: "Door Part Size", path: "/master/door-part-size", icon: <Ruler size={18} /> },
       { name: "Design", path: "/master/design", icon: <DoorOpen size={18} /> },
       { name: "Shift Time", path: "/master/shift-time", icon: <Timer size={18} /> },
-      
+      { name: "Brand", path: "/master/brand", icon: <LeafyGreen size={18} /> },
       { name: "Distributor", path: "/master/distributor", icon: <Bus size={18} /> },
       {
     name: "Location",

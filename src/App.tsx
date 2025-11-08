@@ -60,6 +60,10 @@ import ListShiftTime from "./Masters/ShiftTime/List";
 import AddShiftTime from "./Masters/ShiftTime/Add";
 import EditShiftTime from "./Masters/ShiftTime/Edit";
 
+import ListBrand from "./Masters/Brand/List";
+import AddBrand from "./Masters/Brand/Add";
+import EditBrand from "./Masters/Brand/Edit";
+
 import EditProfile from "./Profile/EditProfile";
 import ChangePassword from "./Profile/changePassword";
 
@@ -145,6 +149,11 @@ export default function App() {
                   <Route path="shift-time" element={<ListShiftTime />} />
                   <Route path="shift-time/add" element={<AddShiftTime />} />
                   <Route path="shift-time/edit/:id" element={<EditShiftTime />}/>
+
+                  {/* Shift Time Master */}
+                  <Route path="brand" element={<ListBrand />} />
+                  <Route path="brand/add" element={<AddBrand />} />
+                  <Route path="brand/edit/:id" element={<EditBrand />}/>
 
                 </Routes>
               </Layout>

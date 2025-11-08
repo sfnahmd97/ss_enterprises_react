@@ -112,6 +112,7 @@ export default function addCustomer() {
           state_id: "",
           district_id: "",
           location_id: "",
+          brand_id: "",
           status: true,
         }}
         onSubmit={handleSubmit}
