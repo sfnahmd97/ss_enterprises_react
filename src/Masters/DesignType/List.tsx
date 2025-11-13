@@ -39,11 +39,12 @@ export default function Main() {
       setTotal(response.meta.total);
       setLastPage(response.meta.last_page);
     } catch (error: any) {
-      console.error("Failed to fetch design_types:", error);
+      console.error("Failed to fetch design types:", error);
+      const resError = error.response?.data?.error;
       Swal.fire({
         icon: "error",
         title: "Oops!",
-        text: "Something went wrong",
+        text: resError,
       });
     } finally {
       setLoading(false);

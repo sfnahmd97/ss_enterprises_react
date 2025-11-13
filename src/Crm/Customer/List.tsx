@@ -330,7 +330,7 @@ export default function Main() {
                         Brand
                       </p>
                       <p className="text-gray-900">
-                        {selectedCustomer.brand.name}
+                        {selectedCustomer.brand.name || "N/A"}
                       </p>
                     </div>
 

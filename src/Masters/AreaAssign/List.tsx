@@ -39,10 +39,11 @@ export default function Main() {
       setLastPage(response.meta.last_page);
     } catch (error: any) {
       console.error("Failed to fetch Finishings:", error);
+      const resError = error.response?.data?.error;
       Swal.fire({
         icon: "error",
         title: "Oops!",
-        text: "Something went wrong",
+        text: resError,
       });
     } finally {
       setLoading(false);
