@@ -90,6 +90,7 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
+      enableReinitialize={true}
       onSubmit={async (values, formikHelpers) => {
         try {
           await onSubmit(values, formikHelpers); // ✅ button remains disabled on success
@@ -115,6 +116,7 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
             if (mode === "edit" && values.state_id) {
               await fetchDistricts(Number(values.state_id));
               if (values.district_id) {
+                setFieldValue("location_id", "");
                 await fetchLocations(Number(values.district_id));
               }
             }
