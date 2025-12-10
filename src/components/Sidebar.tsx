@@ -18,6 +18,7 @@ import {
   ContactRound,
   Timer,
   LeafyGreen,
+  BrainCog,
 } from "lucide-react";
 
 interface MenuItem {
@@ -47,6 +48,7 @@ const sections: Section[] = [
       { name: "Design", path: "/master/design", icon: <DoorOpen size={18} /> },
       { name: "Shift Time", path: "/master/shift-time", icon: <Timer size={18} /> },
       { name: "Brand", path: "/master/brand", icon: <LeafyGreen size={18} /> },
+      { name: "Machine", path: "/master/machine", icon: <BrainCog size={18} /> },
       { name: "Distributor", path: "/master/distributor", icon: <Bus size={18} /> },
       {
     name: "Location",

@@ -64,6 +64,10 @@ import ListBrand from "./Masters/Brand/List";
 import AddBrand from "./Masters/Brand/Add";
 import EditBrand from "./Masters/Brand/Edit";
 
+import ListMachine from "./Masters/Machine/List";
+import AddMachine from "./Masters/Machine/Add";
+import EditMachine from "./Masters/Machine/Edit";
+
 import EditProfile from "./Profile/EditProfile";
 import ChangePassword from "./Profile/changePassword";
 
@@ -150,10 +154,15 @@ export default function App() {
                   <Route path="shift-time/add" element={<AddShiftTime />} />
                   <Route path="shift-time/edit/:id" element={<EditShiftTime />}/>
 
-                  {/* Shift Time Master */}
+                  {/* Brand Master */}
                   <Route path="brand" element={<ListBrand />} />
                   <Route path="brand/add" element={<AddBrand />} />
                   <Route path="brand/edit/:id" element={<EditBrand />}/>
+
+                   {/* Machine Master */}
+                  <Route path="machine" element={<ListMachine />} />
+                  <Route path="machine/add" element={<AddMachine />} />
+                  <Route path="machine/edit/:id" element={<EditMachine />}/>
 
                 </Routes>
               </Layout>

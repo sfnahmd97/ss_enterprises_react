@@ -154,3 +154,9 @@ export interface Brand {
   name: string;
   status?: boolean;
 }
+
+export interface Machine {
+  id?: number;
+  name: string;
+  status?: boolean;
+}

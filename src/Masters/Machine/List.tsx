@@ -27,7 +27,7 @@ export default function Main() {
 
       const params: any = { page, per_page: perPage };
       if (search) params.search_key = search;
-      const res = await api.get<ListApiResponse<any[]>>(`/brand`, {
+      const res = await api.get<ListApiResponse<any[]>>(`/machine`, {
         params,
       });
 
@@ -56,7 +56,7 @@ export default function Main() {
       async () => {
         try {
           setStatusLoading(id);
-          const res = await api.put(`/brand/change-status/${id}`);
+          const res = await api.put(`/machine/change-status/${id}`);
           const message = (res.data as { message: string }).message;
           toast.success(message);
           fetchDesignTypes(currentPage);
@@ -103,7 +103,7 @@ export default function Main() {
                     d="M9 5l7 7-7 7"
                   />
                 </svg>
-                <span className="text-gray-700 font-medium">Brand</span>
+                <span className="text-gray-700 font-medium">Machine</span>
               </div>
             </li>
           </ol>
@@ -111,7 +111,7 @@ export default function Main() {
 
         {/* Add Button */}
         <Link
-          to="/master/brand/add"
+          to="/master/machine/add"
           className="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition"
         >
           + Add
@@ -121,7 +121,7 @@ export default function Main() {
       <div className="bg-white shadow rounded-xl border border-gray-200">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center p-4 border-b border-gray-200 gap-3">
           <h6 className="text-lg font-semibold text-gray-800">
-            Brand List
+            Machine List
           </h6>
           <input
             type="text"
@@ -191,7 +191,7 @@ export default function Main() {
                     </td>
                     <td className="px-4 py-3 text-center space-x-2">
                       <Link
-                        to={`/master/brand/edit/${val.id}`}
+                        to={`/master/machine/edit/${val.id}`}
                         className="inline-flex items-center justify-center p-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
                         title="Edit"
                       >
