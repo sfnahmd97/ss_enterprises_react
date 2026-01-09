@@ -2,6 +2,9 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import type { FormikHelpers } from "formik";
 import * as Yup from "yup";
 import type { ShiftTime } from "../../interfaces/common";
+import { useEffect, useState } from "react";
+import api from "../../lib/axios";
+
 
 interface Props {
   initialValues: ShiftTime;
@@ -14,11 +17,29 @@ interface Props {
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required("Please Enter Title"),
+  type: Yup.string().required("Please choose type"),
   start_time: Yup.string().required("Please Enter a Start Time"),
   end_time: Yup.string().required("Please Enter an End Time")
 });
 
 export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
+    const [shiftTypes, setshiftTypes] = useState<Record<string, string>>({});
+  
+   useEffect(() => {
+      const fetchShiftTimeTypes = async () => {
+        try {
+          const res = await api.get("common/get-shift-types"); 
+          const data = (res.data as { data: any }).data;
+  
+        setshiftTypes(data);
+        } catch (error) {
+          console.error("Failed to load shift types", error);
+        }
+      };
+  
+      fetchShiftTimeTypes();
+    }, []);
+
   return (
     <Formik
       initialValues={initialValues}
@@ -48,6 +69,34 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
             />
             <ErrorMessage
               name="title"
+              component="div"
+              className="text-red-500 text-sm mt-1"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Type <span className="text-red-500">*</span>
+            </label>
+            <Field
+          as="select"
+          name="type"
+          className={`w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none 
+            ${
+              errors.type && touched.type
+                ? "border-red-500"
+                : "border-gray-300"
+            }`}
+        >
+          <option value="">-- Select a type --</option>
+              {Object.entries(shiftTypes).map(([key, label]) => (
+                <option key={key} value={key}>
+                  {label}
+                </option>
+              ))}
+        </Field>
+            <ErrorMessage
+              name="type"
               component="div"
               className="text-red-500 text-sm mt-1"
             />

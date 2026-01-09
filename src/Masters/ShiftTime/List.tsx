@@ -142,6 +142,7 @@ export default function Main() {
               <tr>
                 <th className="px-4 py-3">#</th>
                 <th className="px-4 py-3">Name</th>
+                <th className="px-4 py-3">Type</th>
                 <th className="px-4 py-3">Start Time</th>
                 <th className="px-4 py-3">End Time</th>
                 <th className="px-4 py-3 text-center">Status</th>
@@ -169,6 +170,7 @@ export default function Main() {
                       {(currentPage - 1) * perPage + (index + 1)}
                     </td>
                     <td className="px-4 py-3">{val.title}</td>
+                    <td className="px-4 py-3">{val.type_label}</td>
                     <td className="px-4 py-3">{val.start_time}</td>
                     <td className="px-4 py-3">{val.end_time}</td>
                     <td className="px-4 py-3 text-center">

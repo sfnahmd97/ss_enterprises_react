@@ -92,7 +92,7 @@ export default function addShiftTime() {
           </ol>
         </nav>
     <MasterForm
-      initialValues={{ title: "", start_time: "",end_time: "", status: true }}
+      initialValues={{ title: "", start_time: "",type:"",end_time: "", status: true }}
       onSubmit={handleSubmit}
       mode="create"
     />

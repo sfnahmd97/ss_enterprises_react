@@ -144,6 +144,7 @@ export interface AreaAssign {
  export interface ShiftTime {
   id?: number;
   title: string;
+  type: string;
   start_time: string;
   end_time: string;
   status?: boolean;
