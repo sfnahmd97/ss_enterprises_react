@@ -1,31 +1,45 @@
 "use client";
-import React from "react";
-// import StatCard from "./../../../UtilComponent/StatCard";
-// import RevenueChart from "./../../../UtilComponent/RevenueChart";
-import { LineChart, Line, BarChart, Bar, ResponsiveContainer } from "recharts";
+import React, { useState, useEffect } from "react";
+import { Users, UserCheck, Bus } from "lucide-react";
 import StatCard from "../components/StateCard";
-import RevenueChart from "../components/RevenueChart";
+import api from "../lib/axios";
 
-interface ChartData {
-  name: string;
-  value: number;
+interface DashboardData {
+  customers_count: number;
+  employees_count: number;
+  distributors_count: number;
 }
 
-const lineData: ChartData[] = [
-  { name: "A", value: 2 },
-  { name: "B", value: 4 },
-  { name: "C", value: 3 },
-  { name: "D", value: 5 },
-];
-
-const barData: ChartData[] = [
-  { name: "A", value: 3 },
-  { name: "B", value: 5 },
-  { name: "C", value: 2 },
-  { name: "D", value: 4 },
-];
 
 const Home: React.FC = () => {
+  const [dashboardData, setDashboardData] = useState<DashboardData>({
+    customers_count: 0,
+    employees_count: 0,
+    distributors_count: 0,
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true);
+        const res = await api.get("/get-dashboard-data");
+        const data = (res.data as { data: DashboardData }).data;
+        setDashboardData(data);
+      } catch (error: any) {
+        console.error("Failed to fetch dashboard data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
+  const formatNumber = (num: number): string => {
+    return num.toLocaleString("en-US");
+  };
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       {/* Header */}
@@ -39,62 +53,32 @@ const Home: React.FC = () => {
       {/* Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <StatCard
-          title="NEW CUSTOMERS"
-          value="3,897"
+          title="CUSTOMERS"
+          value={loading ? "..." : formatNumber(dashboardData.customers_count)}
           change="+3.3%"
           positive={true}
-          chart={
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={lineData}>
-                <Line
-                  type="monotone"
-                  dataKey="value"
-                  stroke="#6366F1"
-                  strokeWidth={2}
-                  dot={false}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          }
+          icon={<Users className="w-6 h-6" />}
+          link="/crm/customer"
         />
 
         <StatCard
-          title="NEW ORDERS"
-          value="35,084"
-          change="-2.8%"
-          positive={false}
-          chart={
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={barData}>
-                <Bar dataKey="value" fill="#6366F1" />
-              </BarChart>
-            </ResponsiveContainer>
-          }
+          title="EMPLOYEES"
+          value={loading ? "..." : formatNumber(dashboardData.employees_count)}
+          change="+5.2%"
+          positive={true}
+          icon={<UserCheck className="w-6 h-6" />}
+          link="/hrm/employee"
         />
 
-        <StatCard 
-          title="GROWTH"
-          value="89.87%"
-          change="+2.8%"
+        <StatCard 
+          title="DISTRIBUTORS"
+          value={loading ? "..." : formatNumber(dashboardData.distributors_count)}
+          change="+1.8%"
           positive={true}
-          chart={
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={lineData}>
-                <Line
-                  type="monotone"
-                  dataKey="value"
-                  stroke="#6366F1"
-                  strokeWidth={2}
-                  dot={false}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          }
+          icon={<Bus className="w-6 h-6" />}
+          link="/master/distributor"
         />
       </div>
-
-      {/* Revenue Chart */}
-      <RevenueChart />
     </div>
   );
 };

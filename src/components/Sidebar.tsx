@@ -11,14 +11,14 @@ import {
   Palette,
   Ruler,
   DoorOpen,
-  UsersRound,
   Bus,
   Map,
   CircleSmall,
-  ContactRound,
   Timer,
   LeafyGreen,
   BrainCog,
+  UserCheck,
+  Users,
 } from "lucide-react";
 
 interface MenuItem {
@@ -63,11 +63,11 @@ const sections: Section[] = [
   },
    {
     title: "HRM",
-    items: [{ name: "Employees", path: "/hrm/employee", icon: <UsersRound size={18} /> },],
+    items: [{ name: "Employees", path: "/hrm/employee", icon: <UserCheck size={18} /> },],
   },
   {
     title: "CRM",
-    items: [{ name: "Customers", path: "/crm/customer", icon: <ContactRound size={18} /> },],
+    items: [{ name: "Customers", path: "/crm/customer", icon: <Users size={18} /> },],
   },
 ];
 

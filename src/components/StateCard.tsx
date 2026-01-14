@@ -1,21 +1,27 @@
 
 
 import React, {type ReactNode } from "react";
+import { Link } from "react-router-dom";
 
 interface StatCardProps {
   title: string;
   value: string;
   change: string;
   positive: boolean;
-  chart: ReactNode;
+  icon?: ReactNode;
+  link?: string;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ title, value, change, positive, chart }) => {
-  return (
-    <div className="bg-white shadow rounded-xl p-5 flex-1 min-w-[250px]">
+const StatCard: React.FC<StatCardProps> = ({ title, value, change, positive, icon, link }) => {
+  const cardContent = (
+    <div className="bg-white shadow rounded-xl p-5 flex-1 min-w-[250px] hover:shadow-lg transition-shadow cursor-pointer">
       <div className="flex justify-between items-center mb-3">
         <h4 className="text-gray-600 font-medium">{title}</h4>
-        <span className="text-gray-400">...</span>
+        {icon && (
+          <div className="text-gray-400">
+            {icon}
+          </div>
+        )}
       </div>
       <p className="text-2xl font-bold">{value}</p>
       <p
@@ -25,9 +31,14 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, change, positive, cha
       >
         {change} {positive ? "↑" : "↓"}
       </p>
-      <div className="h-12 mt-3">{chart}</div>
     </div>
   );
+
+  if (link) {
+    return <Link to={link}>{cardContent}</Link>;
+  }
+
+  return cardContent;
 };
 
 export default StatCard;
