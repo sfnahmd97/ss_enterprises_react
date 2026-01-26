@@ -25,6 +25,7 @@ const validationSchema = Yup.object().shape({
   district_id: Yup.string().required("Please choose a district."),
   location_id: Yup.string().required("Please choose a location."),
   brand_id: Yup.string().required("Please choose a brand."),
+  gstin: Yup.string().nullable().length(15, "Please enter valid GST Number."),
 });
 
 export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
@@ -196,7 +197,26 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
                   className="text-red-500 text-sm mt-1"
                 />
               </div>
-
+<div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  GST Number
+                </label>
+                <Field
+                  type="text"
+                  name="gstin"
+                  placeholder="Enter GST Number"
+                  className={`w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none ${
+                    errors.gstin && touched.gstin
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  }`}
+                />
+                <ErrorMessage
+                  name="gstin"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
+              </div>
               <div>
   <label className="block text-sm font-medium text-gray-700 mb-1">
     Brand <span className="text-red-500">*</span>

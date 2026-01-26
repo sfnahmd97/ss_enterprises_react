@@ -138,6 +138,7 @@ export interface AreaAssign {
   district_id: number | "";
   location_id: number | "";
   brand_id: number | "";
+  gstin: string | "";
   status?: boolean;
 }
 

@@ -165,6 +165,7 @@ export default function Main() {
                 <th className="px-4 py-3">#</th>
                 <th className="px-4 py-3">Name</th>
                 <th className="px-4 py-3">Phone No.</th>
+                <th className="px-4 py-3">GSTIN</th>
                 <th className="px-4 py-3">Location</th>
                 <th className="px-4 py-3">Created By</th>
                 <th className="px-4 py-3 text-center">Status</th>
@@ -194,6 +195,7 @@ export default function Main() {
                     </td>
                     <td className="px-4 py-3">{val.name}</td>
                     <td className="px-4 py-3">{val.phone_no ?? "N/A"}</td>
+                    <td className="px-4 py-3">{val.gstin ?? "N/A"}</td>
                     <td className="px-4 py-3">{val.location.location_name},{val.district.name},{val.state.name}</td>
                     <td className="px-4 py-3">{val.created_by_type_label}</td>
                     <td className="px-4 py-3 text-center">

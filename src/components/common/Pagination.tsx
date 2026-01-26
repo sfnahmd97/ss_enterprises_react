@@ -38,19 +38,63 @@ export default function Pagination({
         </button>
 
         {/* Page numbers */}
-        {Array.from({ length: lastPage }, (_, i) => i + 1).map((page) => (
-          <button
-            key={page}
-            onClick={() => onPageChange(page)}
-            className={`px-3 py-1 rounded-lg border transition duration-200 ${
-              currentPage === page
-                ? "bg-blue-600 text-white border-blue-600 shadow"
-                : "bg-white text-gray-700 hover:bg-blue-50 border-gray-300"
-            }`}
-          >
-            {page}
-          </button>
-        ))}
+        {(() => {
+          // Logic to generate page numbers with dots
+          const getPageNumbers = () => {
+             // If pages are few, show all
+            if (lastPage <= 7) {
+              return Array.from({ length: lastPage }, (_, i) => i + 1);
+            }
+
+            // Always include first 2
+            const startPages = [1, 2].filter(p => p <= lastPage);
+            // Always include last page
+            const endPages = [lastPage];
+            // Include current and immediate siblings
+            const siblings = [currentPage - 1, currentPage, currentPage + 1].filter(
+              (p) => p > 0 && p <= lastPage
+            );
+
+            // Merge and sort unique
+            const uniquePages = Array.from(
+              new Set([...startPages, ...siblings, ...endPages])
+            ).sort((a, b) => a - b);
+
+            const result: (number | string)[] = [];
+            let prev = 0;
+
+            for (const p of uniquePages) {
+              if (prev > 0) {
+                if (p - prev === 2) {
+                  result.push(prev + 1); // Fill single gap
+                } else if (p - prev > 2) {
+                  result.push("..."); // Add ellipsis for larger gaps
+                }
+              }
+              result.push(p);
+              prev = p;
+            }
+
+            return result;
+          };
+
+          return getPageNumbers().map((page, index) => (
+            <button
+              key={`${page}-${index}`}
+              onClick={() => typeof page === "number" && onPageChange(page)}
+              disabled={page === "..."}
+              className={`px-3 py-1 rounded-lg border transition duration-200 ${
+                currentPage === page
+                  ? "bg-blue-600 text-white border-blue-600 shadow"
+                  : page === "..."
+                  ? "border-transparent text-gray-500 cursor-default px-2"
+                  : "bg-white text-gray-700 hover:bg-blue-50 border-gray-300"
+              }`}
+            >
+              {page}
+            </button>
+          ));
+        })()}
 
         {/* Next */}
         <button
