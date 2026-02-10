@@ -20,6 +20,10 @@ export default function addDesign() {
         formData.append("image", value); 
       } else if (key === "status") {
     formData.append("status", value ? "1" : "0"); 
+  }else if (key === "finishing_ids") {
+    value.forEach((id: number) => {
+      formData.append("finishing_ids[]", id.toString());
+    });
   } else if (value !== null && value !== undefined) {
         formData.append(key, value);
       }
