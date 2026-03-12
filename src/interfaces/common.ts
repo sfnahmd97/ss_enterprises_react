@@ -45,6 +45,7 @@ export interface DoorPart {
   id?: number;
   size: string;
   door_part_id: number | "";
+  order_no: number | "";
   status: boolean;
   doorPart?: DoorPart;
 }

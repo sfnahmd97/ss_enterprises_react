@@ -143,6 +143,7 @@ export default function Main() {
                 <th className="px-4 py-3">#</th>
                 <th className="px-4 py-3">Size</th>
                 <th className="px-4 py-3">Door Part</th>
+                <th className="px-4 py-3">Order No.</th>
                 <th className="px-4 py-3 text-center">Status</th>
                 <th className="px-4 py-3 text-center">Created at</th>
                 <th className="px-4 py-3 text-center">Actions</th>
@@ -169,6 +170,7 @@ export default function Main() {
                     </td>
                     <td className="px-4 py-3">{val.size}</td>
                     <td className="px-4 py-3">{val.door_part.part_name}</td>
+                    <td className="px-4 py-3">{val.order_no}</td>
                     <td className="px-4 py-3 text-center">
                       {val.status ? (
                         <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full">

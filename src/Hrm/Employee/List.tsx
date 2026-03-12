@@ -266,33 +266,35 @@ export default function Main() {
                       })}
                     </td>
                     <td
-                      className="px-4 py-3 text-center space-x-2"
+                      className="px-4 py-3 text-center"
                       onClick={(e) => e.stopPropagation()} // prevent row click from firing when clicking buttons
                     >
-                      <Link
-                        to={`/hrm/employee/edit/${val.id}`}
-                        className="inline-flex items-center justify-center p-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
-                        title="Edit"
-                      >
-                        <Pencil size={16} />
-                      </Link>
+                      <div className="flex items-center justify-center space-x-2">
+                        <Link
+                          to={`/hrm/employee/edit/${val.id}`}
+                          className="inline-flex items-center justify-center p-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
+                          title="Edit"
+                        >
+                          <Pencil size={16} />
+                        </Link>
 
-                      <button
-                        onClick={() => changeStatus(val.id, val.status)}
-                        disabled={statusLoading === val.id}
-                        className={`inline-flex items-center justify-center p-2 text-white rounded-lg shadow transition ${
-                          statusLoading === val.id
-                            ? "bg-gray-400 cursor-not-allowed"
-                            : "bg-red-500 hover:bg-red-600"
-                        }`}
-                        title="Change Status"
-                      >
-                        {statusLoading === val.id ? (
-                          <ButtonLoader text="" />
-                        ) : (
-                          <ToggleLeft size={16} />
-                        )}
-                      </button>
+                        <button
+                          onClick={() => changeStatus(val.id, val.status)}
+                          disabled={statusLoading === val.id}
+                          className={`inline-flex items-center justify-center p-2 text-white rounded-lg shadow transition ${
+                            statusLoading === val.id
+                              ? "bg-gray-400 cursor-not-allowed"
+                              : "bg-red-500 hover:bg-red-600"
+                          }`}
+                          title="Change Status"
+                        >
+                          {statusLoading === val.id ? (
+                            <ButtonLoader text="" />
+                          ) : (
+                            <ToggleLeft size={16} />
+                          )}
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))

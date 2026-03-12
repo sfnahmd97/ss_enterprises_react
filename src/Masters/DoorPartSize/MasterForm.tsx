@@ -101,6 +101,28 @@ export default function MasterForm({ initialValues, onSubmit, mode }: Props) {
             />
           </div>
 
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Order Number <span className="text-red-500">*</span>
+            </label>
+            <Field
+              type="text"
+              name="order_no"
+              placeholder="Enter Order Number"
+              className={`w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none 
+                ${
+                  errors.order_no && touched.order_no
+                    ? "border-red-500"
+                    : "border-gray-300"
+                }`}
+            />
+            <ErrorMessage
+              name="order_no"
+              component="div"
+              className="text-red-500 text-sm mt-1"
+            />
+          </div>
+
           <div className="flex items-center gap-2">
             <input
               type="checkbox"

@@ -92,7 +92,7 @@ export default function addDoorPartSize() {
           </ol>
         </nav>
     <MasterForm
-      initialValues={{ size: "",door_part_id:"", status: true }}
+      initialValues={{ size: "",door_part_id:"",order_no:"", status: true }}
       onSubmit={handleSubmit}
       mode="create"
     />
