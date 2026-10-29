@@ -30,6 +30,16 @@ export default defineConfig(({ mode }) => {
       },
     },
 
+    preview: {
+      proxy: {
+        "/api": {
+          target: env.VITE_API_BASE_URL,
+          changeOrigin: true,
+          secure: false,
+        },
+      },
+    },
+
     build: {
       // ⚙️ 1. Increase limit to silence 500 kB warning
       chunkSizeWarningLimit: 1000, // or higher if you prefer

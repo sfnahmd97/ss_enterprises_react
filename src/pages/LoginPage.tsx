@@ -22,7 +22,10 @@ export default function LoginPage() {
     if (success) {
       navigate("/dashboard");
     } else {
-      toast.error("Invalid credentials, please try again.");
+      const errorMsg =
+        useAuthStore.getState().loginError ||
+        "Invalid credentials, please try again.";
+      toast.error(errorMsg);
     }
   };
 

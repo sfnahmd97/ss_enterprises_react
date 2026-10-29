@@ -1,8 +1,11 @@
 import axios from "axios";
 
+// In dev mode, use "/api" to route through Vite's dev proxy (server.proxy).
+// In build / production, call the API URL directly (e.g. https://api.ssemlp.com/api).
 const api = axios.create({
-  baseURL: "/api", 
-  withCredentials: true,
+  baseURL: import.meta.env.DEV
+    ? "/api"
+    : `${import.meta.env.VITE_API_BASE_URL || ""}/api`,
 });
 
 api.interceptors.request.use(
@@ -20,19 +23,19 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    
-    console.error(" API Error:", error.response?.status, error.response?.data); // debug
+    console.error("API Error:", error.response?.status, error.response?.data);
     if ([401, 403, 419].includes(error.response?.status)) {
-  localStorage.removeItem("auth_token"); 
-  window.location.href = "/login";
-}
+      localStorage.removeItem("auth_token");
+      localStorage.removeItem("auth_user");
+      if (!window.location.pathname.includes("/login")) {
+        window.location.href = "/login";
+      }
+    }
     return Promise.reject(error);
   }
 );
-
 
 export default api;
